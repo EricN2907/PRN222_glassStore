@@ -1,0 +1,141 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "glass_StoreContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "IrregularWords": null,
+   "MinimumProductVersion": "2.6.1301",
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PluralRules": null,
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "glassStore.Entites.NamNH",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "SingularRules": null,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Brands_TanTM]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cart_Item_MinhLK]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Cart_MinhLK]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories_TanTM]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Inventory_VanNB]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order_Detail_NamNH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Orders_NamNH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payments]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Preorder]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Preorder_Event]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Prescription_Eye_Details_TanBN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Prescription_TanBN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product_Media_VanNB]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product_Reviews_VanNB]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product_Variants_VanNB]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Products_TanTM]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Return_Request]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Role]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Shipping_NhatM]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[System.UserAccount]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tracking_Event_NhatM]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Vouchers_TanTM]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\glassStore.MVCWebApp.NamNH.props" />
+</Project>

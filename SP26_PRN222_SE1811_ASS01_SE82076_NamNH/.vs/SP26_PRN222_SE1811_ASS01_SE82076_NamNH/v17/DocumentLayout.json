@@ -1,0 +1,96 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|d:\\fpt\\prn222\\sp26_prn222_se1811_ass01_se82076_namnh\\glassstore.repositories.namnh\\dbcontext\\glass_storecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|solutionrelative:glassstore.repositories.namnh\\dbcontext\\glass_storecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|d:\\fpt\\prn222\\sp26_prn222_se1811_ass01_se82076_namnh\\glassstore.repositories.namnh\\glassstore.repositories.namnh.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|solutionrelative:glassstore.repositories.namnh\\glassstore.repositories.namnh.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|d:\\fpt\\prn222\\sp26_prn222_se1811_ass01_se82076_namnh\\glassstore.repositories.namnh\\dbcontext\\efpt.config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E90F8BE1-DC4B-4B1C-8B52-5C27001C3BC0}|glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj|solutionrelative:glassstore.repositories.namnh\\dbcontext\\efpt.config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B46696C-0DB3-43D0-96DD-829EE0F6EC3F}|glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj|d:\\fpt\\prn222\\sp26_prn222_se1811_ass01_se82076_namnh\\glassstore.entites.namnh\\glassstore.entites.namnh.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0B46696C-0DB3-43D0-96DD-829EE0F6EC3F}|glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj|solutionrelative:glassstore.entites.namnh\\glassstore.entites.namnh.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "efpt.config.json",
+              "DocumentMoniker": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\DBContext\\efpt.config.json",
+              "RelativeDocumentMoniker": "glassStore.Repositories.NamNH\\DBContext\\efpt.config.json",
+              "ToolTip": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\DBContext\\efpt.config.json",
+              "RelativeToolTip": "glassStore.Repositories.NamNH\\DBContext\\efpt.config.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-12T15:21:22.853Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "glassStore.Entites.NamNH",
+              "DocumentMoniker": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj",
+              "RelativeDocumentMoniker": "glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj",
+              "ToolTip": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj",
+              "RelativeToolTip": "glassStore.Entites.NamNH\\glassStore.Entites.NamNH.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-12T15:24:14.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "glass_StoreContext.cs",
+              "DocumentMoniker": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\DBContext\\glass_StoreContext.cs",
+              "RelativeDocumentMoniker": "glassStore.Repositories.NamNH\\DBContext\\glass_StoreContext.cs",
+              "ToolTip": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\DBContext\\glass_StoreContext.cs",
+              "RelativeToolTip": "glassStore.Repositories.NamNH\\DBContext\\glass_StoreContext.cs",
+              "ViewState": "AgIAAFoDAAAAAAAAAAAAAFwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-12T15:16:49.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "glassStore.Repositories.NamNH",
+              "DocumentMoniker": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
+              "RelativeDocumentMoniker": "glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
+              "ToolTip": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
+              "RelativeToolTip": "glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-12T15:13:56.27Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

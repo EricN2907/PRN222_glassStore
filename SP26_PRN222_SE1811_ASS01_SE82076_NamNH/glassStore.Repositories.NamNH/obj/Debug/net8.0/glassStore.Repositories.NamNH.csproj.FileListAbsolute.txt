@@ -1,0 +1,11 @@
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\bin\Debug\net8.0\glassStore.Repositories.NamNH.deps.json
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\bin\Debug\net8.0\glassStore.Repositories.NamNH.dll
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\bin\Debug\net8.0\glassStore.Repositories.NamNH.pdb
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.GeneratedMSBuildEditorConfig.editorconfig
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.AssemblyInfoInputs.cache
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.AssemblyInfo.cs
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.csproj.CoreCompileInputs.cache
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.dll
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\refint\glassStore.Repositories.NamNH.dll
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\glassStore.Repositories.NamNH.pdb
+D:\FPT\PRN222\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\glassStore.Repositories.NamNH\obj\Debug\net8.0\ref\glassStore.Repositories.NamNH.dll
