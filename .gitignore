@@ -1,0 +1,9 @@
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.shellmnt
+**/glassStore.MVCWebApp.NamNH/appsettings.json
+**/glassStore.MVCWebApp.NamNH/appsettings.Development.json
+*.log
