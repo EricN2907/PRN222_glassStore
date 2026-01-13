@@ -29,5 +29,3 @@ Dự án được chia thành các project con để đảm bảo tính tách bi
     * Mở file `.sln` bằng Visual Studio.
     * Nhấn `F5` hoặc chọn `Run` để khởi động ứng dụng.
 
-## 👥 Thành viên thực hiện
-* **Tác giả:** EricN2907 (NamNH)
