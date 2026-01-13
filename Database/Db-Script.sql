@@ -179,7 +179,7 @@ CREATE TABLE Orders_NamNH (
     -- [PDF] Nhóm Price
     subtotal DECIMAL(18, 2),        -- Tổng tiền hàng
     discount_total DECIMAL(18, 2),  -- Tổng giảm giá
-    tax_total DECIMAL(18, 2),       -- Thuế
+    tax_total DECIMAL(18, 2),		   -- Thuế
     shipping_fee DECIMAL(18, 2),    -- Phí ship
     grand_total DECIMAL(18, 2),     -- Tổng thanh toán cuối cùng (total_amount)
     

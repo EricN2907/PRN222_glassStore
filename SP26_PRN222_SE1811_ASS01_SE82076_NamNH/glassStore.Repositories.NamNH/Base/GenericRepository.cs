@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using glassStore.Entites.NamNH.Models;
-using glassStore_Repositories.NamNH.DBContext;
+using glassStore_Repositories.NamNH;
 using Microsoft.EntityFrameworkCore;
 
 namespace glassStore_Repositories.NamNH.Base
 {
     public class GenericRepository<T> where T : class
     {
-        protected PRN222_ProjectContext _context;
+        protected glass_StoreContext _context;
 
         public GenericRepository()
         {
-            _context ??= new PRN222_ProjectContext();
+            _context ??= new glass_StoreContext();
         }
 
-        public GenericRepository(PRN222_ProjectContext context)
+        public GenericRepository(glass_StoreContext context)
         {
             _context = context;
         }
@@ -42,6 +42,7 @@ namespace glassStore_Repositories.NamNH.Base
             _context.Add(entity);
             return await _context.SaveChangesAsync();
         }
+        
         public void Update(T entity)
         {
             //// Turning off Tracking for UpdateAsync in Entity Framework

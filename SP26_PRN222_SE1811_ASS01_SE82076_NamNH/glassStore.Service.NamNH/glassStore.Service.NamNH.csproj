@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\glassStore.Entites.NamNH\glassStore.Entites.NamNH.csproj" />
+    <ProjectReference Include="..\glassStore.Repositories.NamNH\glassStore.Repositories.NamNH.csproj" />
+  </ItemGroup>
+
 </Project>

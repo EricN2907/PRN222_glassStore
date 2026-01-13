@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("glassStore.Entites.NamNH")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+127eeb0d8b2c8bd383c9002de159cf60f03b79a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("glassStore.Entites.NamNH")]
 [assembly: System.Reflection.AssemblyTitleAttribute("glassStore.Entites.NamNH")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

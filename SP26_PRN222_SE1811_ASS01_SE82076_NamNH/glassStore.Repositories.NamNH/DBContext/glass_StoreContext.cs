@@ -3,14 +3,32 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 namespace glassStore.Entites.NamNH.Models;
 
 public partial class glass_StoreContext : DbContext
 {
+    public glass_StoreContext()
+    {
+    }
     public glass_StoreContext(DbContextOptions<glass_StoreContext> options)
         : base(options)
     {
     }
+    public static string GetConnectionString(string connectionStringName)
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        string connectionString = config.GetConnectionString(connectionStringName);
+        return connectionString;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
 
     public virtual DbSet<BrandsTanTm> BrandsTanTms { get; set; }
 

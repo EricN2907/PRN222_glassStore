@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\glassStore.MVCWebApp.NamNH.csproj",
+      "projectUniqueName": "D:\\FPT\\PRN222\\GlassesShoppingCart\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\glassStore.MVCWebApp.NamNH.csproj",
       "projectName": "glassStore.MVCWebApp.NamNH",
-      "projectPath": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\glassStore.MVCWebApp.NamNH.csproj",
+      "projectPath": "D:\\FPT\\PRN222\\GlassesShoppingCart\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\glassStore.MVCWebApp.NamNH.csproj",
       "packagesPath": "C:\\Users\\hoang\\.nuget\\packages\\",
-      "outputPath": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\obj\\",
+      "outputPath": "D:\\FPT\\PRN222\\GlassesShoppingCart\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

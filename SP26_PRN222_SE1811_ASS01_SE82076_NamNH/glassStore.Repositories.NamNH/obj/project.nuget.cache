@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "It9MYvWTEtM=",
+  "dgSpecHash": "Ih8fx0o3tew=",
   "success": true,
-  "projectFilePath": "D:\\FPT\\PRN222\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
+  "projectFilePath": "D:\\FPT\\PRN222\\GlassesShoppingCart\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.Repositories.NamNH\\glassStore.Repositories.NamNH.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hoang\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\hoang\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
