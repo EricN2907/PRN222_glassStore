@@ -5,10 +5,10 @@ Dự án quản lý cửa hàng kính mắt được xây dựng trên nền t�
 ## 🏗️ Cấu trúc dự án (Project Structure)
 Dự án được chia thành các project con để đảm bảo tính tách biệt (Separation of Concerns):
 
-* **glassStore.Entities.NamNH**: Chứa các Model và thực thể của hệ thống.
-* **glassStore.Repositories.NamNH**: Tầng truy xuất dữ liệu (Data Access Layer), làm việc trực tiếp với Database.
-* **glassStore.Service.NamNH**: Tầng xử lý nghiệp vụ (Business Logic Layer), kết nối giữa Repositories và MVC.
-* **glassStore.MVCWebApp.NamNH**: Tầng giao diện người dùng (User Interface) sử dụng mô hình ASP.NET Core MVC.
+* **glassStore.Entities**: Chứa các Model và thực thể của hệ thống.
+* **glassStore.Repositories**: Tầng truy xuất dữ liệu (Data Access Layer), làm việc trực tiếp với Database.
+* **glassStore.Service**: Tầng xử lý nghiệp vụ (Business Logic Layer), kết nối giữa Repositories và MVC.
+* **glassStore.MVCWebApp**: Tầng giao diện người dùng (User Interface) sử dụng mô hình ASP.NET Core MVC.
 
 ## 🛠️ Công nghệ sử dụng
 * **Language:** C# (.NET)
