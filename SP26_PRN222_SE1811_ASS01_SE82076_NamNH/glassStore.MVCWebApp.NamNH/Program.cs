@@ -1,8 +1,13 @@
+using glassStore.Service.NamNH;
+using glassStore.Service.NamNH.Interface;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+// Add depenency injection
+builder.Services.AddScoped<IOrdersNamNhService, OrdersNamNhService>();
+builder.Services.AddScoped<OrderDetailNamNhService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

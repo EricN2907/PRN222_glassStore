@@ -1,0 +1,14 @@
+﻿{
+   "ConnectionStringName": "dab-connection-string",
+   "Dacpac": null,
+   "DatabaseType": 3,
+   "MergeDacpacs": false,
+   "Optional": false,
+   "ProjectPath": "D:\\FPT\\PRN222\\GlassesShoppingCart\\SP26_PRN222_SE1811_ASS01_SE82076_NamNH\\glassStore.MVCWebApp.NamNH",
+   "Tables": [
+      {
+         "Name": "[dbo].[Orders_NamNH]",
+         "ObjectType": 0
+      }
+   ]
+}
