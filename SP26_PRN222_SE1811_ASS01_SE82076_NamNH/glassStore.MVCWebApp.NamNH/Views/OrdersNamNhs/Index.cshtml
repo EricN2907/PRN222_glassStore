@@ -1,131 +1,217 @@
 ﻿@model IEnumerable<glassStore.Entites.NamNH.Models.OrdersNamNh>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý Đơn Hàng";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subtotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DiscountTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TaxTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingFee)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GrandTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CustomerNote)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReceiverName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReceiverPhone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReceiverAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Voucher)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subtotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DiscountTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaxTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingFee)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GrandTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerNote)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReceiverName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReceiverPhone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReceiverAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Voucher.Code)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<style>
+    /* Glass Store Theme */
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .page-header {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        border-left: 5px solid #17a2b8;
+        padding-left: 15px;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        background: #ffffff;
+        margin-bottom: 2rem;
+        transition: transform 0.2s;
+    }
+
+    .table thead th {
+        background-color: #343a40;
+        color: #ffffff;
+        border: none;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        white-space: nowrap;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        line-height: 32px;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0 2px;
+    }
+
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-header text-uppercase">
+            <i class="fas fa-glass-martini-alt me-2 text-info"></i> Glass_Store Management
+        </h2>
+    </div>
+
+    <div class="card card-custom">
+        <div class="card-header bg-white border-0 pt-4 pb-0">
+            <h5 class="card-title text-muted"><i class="fas fa-search me-2"></i>Tìm kiếm đơn hàng</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Index" method="get">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">Mã đơn (Code)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-barcode"></i></span>
+                            <input type="text" name="order_code" class="form-control" placeholder="Nhập mã..."
+                                   value="@Context.Request.Query["order_code"]" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">Số điện thoại</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                            <input type="text" name="phone_number" class="form-control" placeholder="09xx..."
+                                   value="@Context.Request.Query["phone_number"]" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">Tên sản phẩm / KH</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="fas fa-tag"></i></span>
+                            <input type="text" name="product_name" class="form-control" placeholder="Nhập tên..."
+                                   value="@Context.Request.Query["product_name"]" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="d-grid gap-2 d-md-block w-100">
+                            <button type="submit" class="btn btn-info text-white fw-bold shadow-sm">
+                                <i class="fas fa-search me-1"></i> Tìm kiếm
+                            </button>
+                            <a asp-action="Create" class="btn btn-outline-primary fw-bold shadow-sm">
+                                <i class="fas fa-plus me-1"></i> Tạo mới
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card card-custom">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="120px">Thao tác</th>
+                            <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
+                            <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            <th>@Html.DisplayNameFor(model => model.GrandTotal)</th>
+                            <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ReceiverPhone)</th>
+                            <th>@Html.DisplayNameFor(model => model.OrderType)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
+                            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+
+                            <th>@Html.DisplayNameFor(model => model.Subtotal)</th>
+                            <th>@Html.DisplayNameFor(model => model.DiscountTotal)</th>
+                            <th>@Html.DisplayNameFor(model => model.TaxTotal)</th>
+                            <th>@Html.DisplayNameFor(model => model.ShippingFee)</th>
+                            <th>@Html.DisplayNameFor(model => model.ReceiverAddress)</th>
+                            <th>@Html.DisplayNameFor(model => model.User)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center bg-white sticky-col">
+                                        <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-warning btn-icon" title="Sửa">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info btn-icon" title="Chi tiết">
+                                            <i class="fas fa-info"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger btn-icon" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                    <td class="fw-bold text-primary">@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                                    <td>
+                                        @{
+                                            var statusClass = "bg-secondary";
+                                            if (item.Status != null)
+                                            {
+                                                var st = item.Status.ToString().ToLower();
+                                                if (st.Contains("success") || st.Contains("done") || st.Contains("completed")) { statusClass = "bg-success"; }
+                                                else if (st.Contains("pending") || st.Contains("process")) { statusClass = "bg-warning text-dark"; }
+                                                else if (st.Contains("cancel") || st.Contains("fail")) { statusClass = "bg-danger"; }
+                                                else { statusClass = "bg-info"; }
+                                            }
+                                        }
+                                        <span class="badge @statusClass badge-status">@Html.DisplayFor(modelItem => item.Status)</span>
+                                    </td>
+                                    <td class="fw-bold text-success">
+                                        @Html.DisplayFor(modelItem => item.GrandTotal)
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ReceiverPhone)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.OrderType)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+
+                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.Subtotal)</td>
+                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.DiscountTotal)</td>
+                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.TaxTotal)</td>
+                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.ShippingFee)</td>
+                                    <td class="text-truncate" style="max-width: 150px;" title="@item.ReceiverAddress">
+                                        @Html.DisplayFor(modelItem => item.ReceiverAddress)
+                                    </td>
+                                    <td>
+                                        @if (item.User != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => item.User.Email)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <p>Không tìm thấy đơn hàng nào phù hợp.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

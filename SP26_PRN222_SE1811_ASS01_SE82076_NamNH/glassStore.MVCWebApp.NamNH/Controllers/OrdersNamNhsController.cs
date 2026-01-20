@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using glassStore.Entites.NamNH.Models;
 using glassStore.Service.NamNH.Interface;
 using glassStore.Service.NamNH;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace glassStore.MVCWebApp.NamNH.Controllers
 {
@@ -28,10 +29,10 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
     
 
         // GET: OrdersNamNhs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string order_code, string phone_number, string product_name)
         {
-            var item = await _orders.GetAllAsync();
-            return item  == null ? NotFound() : View(item);
+            var items = await _orders.SearchAsync(order_code,phone_number,product_name);
+            return View(items);
         }
         // GET: OrdersNamNhs/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -60,8 +61,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind
-            ("OrderId,UserId,VoucherId,OrderType,OrderCode,PaymentMethod,Subtotal,DiscountTotal,TaxTotal,ShippingFee,GrandTotal,Status,CustomerNote,ReceiverName,ReceiverPhone,ReceiverAddress,CreatedAt,UpdatedAt")] OrdersNamNh ordersNamNh)
+        public async Task<IActionResult> Create(OrdersNamNh ordersNamNh)
         {
             if (ModelState.IsValid)
             {
@@ -81,84 +81,71 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
             return View(ordersNamNh);
         }
 
-        // GET: OrdersNamNhs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var ordersNamNh = await _orders.GetByIdAsync(id.Value);
-            if (ordersNamNh == null) return NotFound();
-
-            // Đã bỏ code load ViewBag/ViewData tại đây
-            return View(ordersNamNh);
+        public async Task<IActionResult> Edit(int id) { 
+        
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var item = await _orders.GetByIdAsync(id);
+            if(item == null)
+            {
+                return NotFound();
+            }
+            return View(item);
         }
 
-        // POST: OrdersNamNhs/Edit/5
+
+        //POST: OrdersNamNhs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,UserId,VoucherId,OrderType,OrderCode,PaymentMethod,Subtotal,DiscountTotal,TaxTotal,ShippingFee,GrandTotal,Status,CustomerNote,ReceiverName,ReceiverPhone,ReceiverAddress,CreatedAt,UpdatedAt")] OrdersNamNh ordersNamNh)
+        public async Task<IActionResult> Edit(int id, OrdersNamNh ordersNamNh)
         {
-           
-            if (id != ordersNamNh.OrderId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _orders.UpdateAsync(ordersNamNh);
+                    var result = await _orders.UpdateAsync(ordersNamNh);
+                    if(result > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    
                 }
-                catch (Exception) // Bắt lỗi nếu Update thất bại
+                catch (Exception ex) 
                 {
-                    // THAY THẾ logic Exists cũ bằng GetByIdAsync
-                    var checkItem = await _orders.GetByIdAsync(id);
-
-                    if (checkItem == null)
-                    {
-                        // Nếu tìm không thấy -> Trả về NotFound
-                        return NotFound();
-                    }
-                    else
-                    {
-                        // Nếu tìm thấy mà vẫn lỗi -> Ném lỗi ra (do lỗi khác)
-                        throw;
-                    }
+                    throw new Exception(ex.Message);
                 }
-                return RedirectToAction(nameof(Index));
             }
+            var orders = await _orders.GetAllAsync();
+            ViewData["order_id"] = new SelectList(orders, "OrderId", "OrderCode");
             return View(ordersNamNh);
         }
 
-        //// GET: OrdersNamNhs/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var ordersNamNh = await _context.OrdersNamNhs
-        //        .Include(o => o.User)
-        //        .Include(o => o.Voucher)
-        //        .FirstOrDefaultAsync(m => m.OrderId == id);
-        //    if (ordersNamNh == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: OrdersNamNhs/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(ordersNamNh);
-        //}
+            var ordersNamNh = await _orders.DeleteAsync(id.Value);
 
-        // POST: OrdersNamNhs/Delete/5
+            return View(ordersNamNh);
+        }
+
+
+
+        //POST: OrdersNamNhs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var ordersNamNh = await _context.OrdersNamNhs.FindAsync(id);
             //if (ordersNamNh != null)
             //{
             //    _context.OrdersNamNhs.Remove(ordersNamNh);
@@ -166,10 +153,16 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 
             //await _context.SaveChangesAsync();
             //return RedirectToAction(nameof(Index));
-            await _orders.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            var result = await _orders.DeleteAsync(id);
+
+            if (result)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Delete), new { id = id });
+
         }
 
-      
+
     }
 }
