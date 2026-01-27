@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using glassStore.Entites.NamNH.Models;
 using glassStore.Repositories.NamNH;
+using glassStore.Service.NamNH.Interface;
 
 namespace glassStore.Service.NamNH
 {
-    public class SystemUserAccountService 
+    public class SystemUserAccountService : IAccountService
     {
         private readonly SystemUserAccountRepositories _systemUserAccountRepositories;
 
@@ -24,6 +25,26 @@ namespace glassStore.Service.NamNH
             {
                 throw new Exception("Error retrieving user.");
             }
+        }
+        public async Task<SystemUserAccount?> LoginAsync(string email, string password)
+        {
+            var user = await _systemUserAccountRepositories.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return null; 
+            }
+            if(user.Password != password)
+            {
+                throw new Exception("INCORRECT_PASSWORD");
+                //văng lỗi
+            }
+            if (user.IsActive == false)
+            {
+                throw new Exception("ACCOUNT_LOCKED");
+                //văng lỗi
+            }
+           
+            return user;
         }
     }
 }

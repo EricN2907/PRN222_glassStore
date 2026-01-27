@@ -1,217 +1,269 @@
 ﻿@model IEnumerable<glassStore.Entites.NamNH.Models.OrdersNamNh>
 
 @{
+    Layout = null;
     ViewData["Title"] = "Quản lý Đơn Hàng";
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Glass Store</title>
 
-<style>
-    /* Glass Store Theme */
-    body {
-        background-color: #f4f6f9;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-    .page-header {
-        color: #2c3e50;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        border-left: 5px solid #17a2b8;
-        padding-left: 15px;
-    }
+    <style>
+        /* --- CSS CHUNG --- */
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    .card-custom {
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        background: #ffffff;
-        margin-bottom: 2rem;
-        transition: transform 0.2s;
-    }
+        /* Navbar */
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-    .table thead th {
-        background-color: #343a40;
-        color: #ffffff;
-        border: none;
-        white-space: nowrap;
-        vertical-align: middle;
-    }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
 
-    .table tbody td {
-        vertical-align: middle;
-        white-space: nowrap;
-        font-size: 0.9rem;
-    }
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 10px;
+        }
 
-    .btn-icon {
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        line-height: 32px;
-        text-align: center;
-        border-radius: 50%;
-        margin: 0 2px;
-    }
+        /* Nội dung chính */
+        .page-header {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 5px solid #17a2b8;
+            padding-left: 15px;
+        }
 
-    .badge-status {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            margin-bottom: 2rem;
+        }
 
-    .form-control:focus {
-        border-color: #17a2b8;
-        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
-    }
-</style>
+        /* Table */
+        .table thead th {
+            background-color: #343a40;
+            color: #ffffff;
+            border: none;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="page-header text-uppercase">
-            <i class="fas fa-window-maximize me-2 text-info"></i> Glass_Store Management
-        </h2>
-    </div>
+        .table tbody td {
+            vertical-align: middle;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
 
-    <div class="card card-custom">
-        <div class="card-header bg-white border-0 pt-4 pb-0">
-            <h5 class="card-title text-muted"><i class="fas fa-search me-2"></i>Tìm kiếm đơn hàng</h5>
-        </div>
-        <div class="card-body">
-            <form asp-action="Index" method="get">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-secondary">Mã đơn (Code)</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fas fa-barcode"></i></span>
-                            <input type="text" name="order_code" class="form-control" placeholder="Nhập mã..."
-                                   value="@Context.Request.Query["order_code"]" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-secondary">Số điện thoại</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
-                            <input type="text" name="phone_number" class="form-control" placeholder="09xx..."
-                                   value="@Context.Request.Query["phone_number"]" />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold text-secondary">Tên sản phẩm / KH</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="fas fa-tag"></i></span>
-                            <input type="text" name="product_name" class="form-control" placeholder="Nhập tên..."
-                                   value="@Context.Request.Query["product_name"]" />
-                        </div>
-                    </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <div class="d-grid gap-2 d-md-block w-100">
-                            <button type="submit" class="btn btn-info text-white fw-bold shadow-sm">
-                                <i class="fas fa-search me-1"></i> Tìm kiếm
-                            </button>
-                            <a asp-action="Create" class="btn btn-outline-primary fw-bold shadow-sm">
-                                <i class="fas fa-plus me-1"></i> Tạo mới
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            margin: 0 2px;
+        }
 
-    <div class="card card-custom">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th class="text-center" width="120px">Thao tác</th>
-                            <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
-                            <th>@Html.DisplayNameFor(model => model.Status)</th>
-                            <th>@Html.DisplayNameFor(model => model.GrandTotal)</th>
-                            <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
-                            <th>@Html.DisplayNameFor(model => model.ReceiverPhone)</th>
-                            <th>@Html.DisplayNameFor(model => model.OrderType)</th>
-                            <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
-                            <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
 
-                            <th>@Html.DisplayNameFor(model => model.Subtotal)</th>
-                            <th>@Html.DisplayNameFor(model => model.DiscountTotal)</th>
-                            <th>@Html.DisplayNameFor(model => model.TaxTotal)</th>
-                            <th>@Html.DisplayNameFor(model => model.ShippingFee)</th>
-                            <th>@Html.DisplayNameFor(model => model.ReceiverAddress)</th>
-                            <th>@Html.DisplayNameFor(model => model.User)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model != null && Model.Any())
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-dark" href="#">
+                    <i class="fas fa-glasses text-info me-2"></i>GLASS_STORE
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark active fw-bold" href="#">Quản lý Đơn Hàng</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            @foreach (var item in Model)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <div class="user-avatar me-2"><i class="fas fa-user"></i></div>
+                                    <span class="fw-bold">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form class="d-inline" asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-info rounded-pill px-4 btn-sm" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid py-2">
+        <h2 class="page-header text-uppercase">
+            <i class="fas fa-list-alt me-2 text-info"></i> Danh Sách Đơn Hàng
+        </h2>
+
+        <div class="card card-custom">
+            <div class="card-body">
+                <form asp-action="Index" method="get">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold text-secondary">Mã đơn (Code)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-barcode"></i></span>
+                                <input type="text" name="order_code" class="form-control" placeholder="Nhập mã..." value="@Context.Request.Query["order_code"]" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold text-secondary">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                <input type="text" name="phone_number" class="form-control" placeholder="09xx..." value="@Context.Request.Query["phone_number"]" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold text-secondary">Tên sản phẩm / KH</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-tag"></i></span>
+                                <input type="text" name="product_name" class="form-control" placeholder="Nhập tên..." value="@Context.Request.Query["product_name"]" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <div class="d-grid gap-2 d-md-block w-100">
+                                <button type="submit" class="btn btn-info text-white fw-bold shadow-sm">
+                                    <i class="fas fa-search me-1"></i> Tìm kiếm
+                                </button>
+                                <a asp-action="Create" class="btn btn-outline-primary fw-bold shadow-sm">
+                                    <i class="fas fa-plus me-1"></i> Tạo mới
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card card-custom">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="120px">Thao tác</th>
+                                <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
+                                <th>@Html.DisplayNameFor(model => model.Status)</th>
+                                <th>@Html.DisplayNameFor(model => model.GrandTotal)</th>
+                                <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
+                                <th>@Html.DisplayNameFor(model => model.ReceiverPhone)</th>
+                                <th>@Html.DisplayNameFor(model => model.OrderType)</th>
+                                <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
+                                <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+                                <th>@Html.DisplayNameFor(model => model.Subtotal)</th>
+                                <th>@Html.DisplayNameFor(model => model.DiscountTotal)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
                             {
-                                <tr>
-                                    <td class="text-center bg-white sticky-col">
-                                        <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-warning btn-icon" title="Sửa">
-                                            <i class="fas fa-pen"></i>
-                                        </a>
-                                        <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info btn-icon" title="Chi tiết">
-                                            <i class="fas fa-info"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger btn-icon" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                    <td class="fw-bold text-primary">@Html.DisplayFor(modelItem => item.OrderCode)</td>
-                                    <td>
-                                        @{
-                                            var statusClass = "bg-secondary";
-                                            if (item.Status != null)
-                                            {
-                                                var st = item.Status.ToString().ToLower();
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center bg-white sticky-col">
+                                            <a asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-warning btn-icon" title="Sửa"><i class="fas fa-pen"></i></a>
+                                            <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info btn-icon" title="Chi tiết"><i class="fas fa-info"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger btn-icon" title="Xóa"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                        <td class="fw-bold text-primary">@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                                        <td>
+                                            @{
+                                                var st = item.Status?.ToString().ToLower() ?? "";
+                                                var statusClass = "bg-secondary";
                                                 if (st.Contains("success") || st.Contains("done") || st.Contains("completed")) { statusClass = "bg-success"; }
                                                 else if (st.Contains("pending") || st.Contains("process")) { statusClass = "bg-warning text-dark"; }
                                                 else if (st.Contains("cancel") || st.Contains("fail")) { statusClass = "bg-danger"; }
                                                 else { statusClass = "bg-info"; }
                                             }
-                                        }
-                                        <span class="badge @statusClass badge-status">@Html.DisplayFor(modelItem => item.Status)</span>
-                                    </td>
-                                    <td class="fw-bold text-success">
-                                        @Html.DisplayFor(modelItem => item.GrandTotal)
-                                    </td>
-                                    <td>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.ReceiverPhone)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.OrderType)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
-
-                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.Subtotal)</td>
-                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.DiscountTotal)</td>
-                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.TaxTotal)</td>
-                                    <td class="text-muted">@Html.DisplayFor(modelItem => item.ShippingFee)</td>
-                                    <td class="text-truncate" style="max-width: 150px;" title="@item.ReceiverAddress">
-                                        @Html.DisplayFor(modelItem => item.ReceiverAddress)
-                                    </td>
-                                    <td>
-                                        @if (item.User != null)
-                                        {
-                                            @Html.DisplayFor(modelItem => item.User.Email)
-                                        }
-                                    </td>
-                                </tr>
+                                            <span class="badge @statusClass badge-status">@Html.DisplayFor(modelItem => item.Status)</span>
+                                        </td>
+                                        <td class="fw-bold text-success">@Html.DisplayFor(modelItem => item.GrandTotal)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ReceiverPhone)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderType)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                                        <td class="text-muted">@Html.DisplayFor(modelItem => item.Subtotal)</td>
+                                        <td class="text-muted">@Html.DisplayFor(modelItem => item.DiscountTotal)</td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            @if (Model == null || !Model.Any())
-            {
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-box-open fa-3x mb-3"></i>
-                    <p>Không tìm thấy đơn hàng nào phù hợp.</p>
+                        </tbody>
+                    </table>
                 </div>
-            }
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-box-open fa-3x mb-3"></i>
+                        <p>Không tìm thấy đơn hàng nào phù hợp.</p>
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,120 +1,219 @@
 ﻿@model glassStore.Entites.NamNH.Models.OrdersNamNh
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
 }
 
-<h1>Details</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-<div>
-    <h4>OrdersNamNh</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentMethod)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentMethod)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Subtotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Subtotal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountTotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiscountTotal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TaxTotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TaxTotal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingFee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingFee)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GrandTotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GrandTotal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomerNote)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CustomerNote)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReceiverName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReceiverName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReceiverPhone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReceiverPhone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReceiverAddress)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReceiverAddress)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Voucher)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Voucher.Code)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.OrderId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<style>
+    /* Glass Store Theme - Details Page */
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .page-header {
+        border-left: 5px solid #17a2b8;
+        padding-left: 15px;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        background: white;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        color: #17a2b8;
+        border-bottom: 2px solid #f1f1f1;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-label {
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        color: #2c3e50;
+        font-weight: 500;
+        font-size: 1rem;
+        margin-bottom: 15px;
+        word-wrap: break-word;
+    }
+
+    .badge-status {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+
+    .total-section {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .grand-total {
+        font-size: 1.5rem;
+        color: #198754; /* Green */
+        font-weight: 800;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-header text-uppercase">
+            <i class="fas fa-file-invoice me-2 text-info"></i> Chi Tiết Đơn Hàng
+        </h2>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.OrderId" class="btn btn-warning text-white shadow-sm me-2">
+                <i class="fas fa-pen me-1"></i> Chỉnh sửa
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-custom p-4 mb-4">
+
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-6">
+                        <h4 class="text-primary fw-bold mb-1">@Html.DisplayFor(model => model.OrderCode)</h4>
+                        <span class="text-muted small">
+                            <i class="far fa-clock me-1"></i> Ngày tạo: @Html.DisplayFor(model => model.CreatedAt)
+                        </span>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        @{
+                            var statusClass = "bg-secondary";
+                            if (Model.Status != null)
+                            {
+                                var st = Model.Status.ToString().ToLower();
+                                if (st.Contains("success") || st.Contains("done") || st.Contains("completed")) { statusClass = "bg-success"; }
+                                else if (st.Contains("pending") || st.Contains("process")) { statusClass = "bg-warning text-dark"; }
+                                else if (st.Contains("cancel") || st.Contains("fail")) { statusClass = "bg-danger"; }
+                                else { statusClass = "bg-info"; }
+                            }
+                        }
+                        <span class="badge @statusClass badge-status shadow-sm">
+                            @Html.DisplayFor(model => model.Status)
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="text-muted opacity-25 mb-4">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="section-title"><i class="fas fa-info-circle me-2"></i>Thông Tin Chung</div>
+
+                        <div class="detail-label">Loại đơn hàng</div>
+                        <div class="detail-value">@Html.DisplayFor(model => model.OrderType)</div>
+
+                        <div class="detail-label">Phương thức thanh toán</div>
+                        <div class="detail-value">@Html.DisplayFor(model => model.PaymentMethod)</div>
+
+                        <div class="detail-label">Tài khoản đặt (User)</div>
+                        <div class="detail-value">
+                            @if (Model.User != null)
+                            {
+                                @Html.DisplayFor(model => model.User.Email)
+                            }
+                            else
+                            {
+
+                                <span class="text-muted font-italic">Khách vãng lai</span>
+                            }
+                        </div>
+
+                        <div class="detail-label">Voucher</div>
+                        <div class="detail-value">
+                            @if (Model.Voucher != null)
+                            {
+                                <span class="badge bg-primary">@Html.DisplayFor(model => model.Voucher.Code)</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">- Không có -</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="section-title"><i class="fas fa-user-tag me-2"></i>Người Nhận</div>
+
+                        <div class="detail-label">Họ và tên</div>
+                        <div class="detail-value fw-bold">@Html.DisplayFor(model => model.ReceiverName)</div>
+
+                        <div class="detail-label">Số điện thoại</div>
+                        <div class="detail-value">@Html.DisplayFor(model => model.ReceiverPhone)</div>
+
+                        <div class="detail-label">Địa chỉ giao hàng</div>
+                        <div class="detail-value">@Html.DisplayFor(model => model.ReceiverAddress)</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="section-title"><i class="fas fa-sticky-note me-2"></i>Ghi Chú</div>
+                        <div class="p-3 bg-light rounded text-muted fst-italic border">
+                            @if (!string.IsNullOrEmpty(Model.CustomerNote))
+                            {
+                                @Html.DisplayFor(model => model.CustomerNote)
+                            }
+                            else
+                            {
+                                <span>Không có ghi chú nào từ khách hàng.</span>
+                            }
+                        </div>
+                        <div class="mt-3">
+                            <div class="detail-label">Cập nhật lần cuối</div>
+                            <div class="text-muted small">@Html.DisplayFor(model => model.UpdatedAt)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 total-section">
+                    <div class="section-title border-0 pb-0 mb-3"><i class="fas fa-receipt me-2"></i>Chi Tiết Thanh Toán</div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="detail-label">Tạm tính (Subtotal)</div>
+                            <div class="fw-bold">@Html.DisplayFor(model => model.Subtotal)</div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="detail-label">Giảm giá (Discount)</div>
+                            <div class="fw-bold text-danger">- @Html.DisplayFor(model => model.DiscountTotal)</div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="detail-label">Thuế (Tax)</div>
+                            <div class="fw-bold">@Html.DisplayFor(model => model.TaxTotal)</div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="detail-label">Phí ship</div>
+                            <div class="fw-bold">@Html.DisplayFor(model => model.ShippingFee)</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="h5 text-uppercase text-secondary mb-0">Tổng cộng (Grand Total):</span>
+                        <span class="grand-total">@Html.DisplayFor(model => model.GrandTotal)</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

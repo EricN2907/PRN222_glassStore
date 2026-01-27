@@ -1,114 +1,172 @@
 ﻿@model glassStore.Entites.NamNH.Models.OrdersNamNh
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh Sửa Đơn Hàng";
 }
 
-<h1>Edit</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-<h4>OrdersNamNh</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="OrderId" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VoucherId" class="control-label"></label>
-                <select asp-for="VoucherId" class="form-control" asp-items="ViewBag.VoucherId"></select>
-                <span asp-validation-for="VoucherId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrderType" class="control-label"></label>
-                <input asp-for="OrderType" class="form-control" />
-                <span asp-validation-for="OrderType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrderCode" class="control-label"></label>
-                <input asp-for="OrderCode" class="form-control" />
-                <span asp-validation-for="OrderCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PaymentMethod" class="control-label"></label>
-                <input asp-for="PaymentMethod" class="form-control" />
-                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Subtotal" class="control-label"></label>
-                <input asp-for="Subtotal" class="form-control" />
-                <span asp-validation-for="Subtotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiscountTotal" class="control-label"></label>
-                <input asp-for="DiscountTotal" class="form-control" />
-                <span asp-validation-for="DiscountTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TaxTotal" class="control-label"></label>
-                <input asp-for="TaxTotal" class="form-control" />
-                <span asp-validation-for="TaxTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShippingFee" class="control-label"></label>
-                <input asp-for="ShippingFee" class="form-control" />
-                <span asp-validation-for="ShippingFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GrandTotal" class="control-label"></label>
-                <input asp-for="GrandTotal" class="form-control" />
-                <span asp-validation-for="GrandTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerNote" class="control-label"></label>
-                <input asp-for="CustomerNote" class="form-control" />
-                <span asp-validation-for="CustomerNote" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReceiverName" class="control-label"></label>
-                <input asp-for="ReceiverName" class="form-control" />
-                <span asp-validation-for="ReceiverName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReceiverPhone" class="control-label"></label>
-                <input asp-for="ReceiverPhone" class="form-control" />
-                <span asp-validation-for="ReceiverPhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReceiverAddress" class="control-label"></label>
-                <input asp-for="ReceiverAddress" class="form-control" />
-                <span asp-validation-for="ReceiverAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAt" class="control-label"></label>
-                <input asp-for="UpdatedAt" class="form-control" />
-                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .page-header {
+        border-left: 5px solid #ffc107;
+        padding-left: 15px;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+
+    .card-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .form-control:focus {
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        color: #d39e00;
+        border-bottom: 2px solid #f1f1f1;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-header text-uppercase"><i class="fas fa-edit me-2 text-warning"></i> Cập Nhật Đơn Hàng</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary shadow-sm"><i class="fas fa-arrow-left me-1"></i> Quay lại</a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="OrderId" />
+                <input type="hidden" asp-for="CreatedAt" /> <div class="card card-custom p-4">
+                    <div class="section-title"><i class="fas fa-info-circle me-2"></i>Thông Tin Đơn Hàng</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label asp-for="OrderCode" class="form-label">Mã Đơn (Code)</label>
+                            <input asp-for="OrderCode" class="form-control" readonly style="background-color: #e9ecef;" />
+                            <span asp-validation-for="OrderCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="OrderType" class="form-label">Loại Đơn</label>
+                            <select asp-for="OrderType" class="form-control">
+                                <option value="Online">Online</option>
+                                <option value="Instore">Tại cửa hàng</option>
+                                <option value="Preorder">Đặt trước</option>
+                            </select>
+                            <span asp-validation-for="OrderType" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Status" class="form-label">Trạng Thái</label>
+                            <select asp-for="Status" class="form-control">
+                                <option value="Pending">Pending (Chờ xử lý)</option>
+                                <option value="Processing">Processing (Đang xử lý)</option>
+                                <option value="Completed">Completed (Hoàn thành)</option>
+                                <option value="Cancelled">Cancelled (Đã hủy)</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PaymentMethod" class="form-label">Phương Thức Thanh Toán</label>
+                            <select asp-for="PaymentMethod" class="form-control">
+                                <option value="COD">COD (Tiền mặt)</option>
+                                <option value="Banking">Chuyển khoản</option>
+                                <option value="Momo">Ví Momo</option>
+                                <option value="VNPay">VNPay</option>
+                            </select>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email Khách Hàng (User ID)</label>
+                            <input asp-for="UserId" class="form-control" />
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="section-title"><i class="fas fa-user-check me-2"></i>Thông Tin Người Nhận</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="ReceiverName" class="form-label">Họ và Tên</label>
+                            <input asp-for="ReceiverName" class="form-control" />
+                            <span asp-validation-for="ReceiverName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ReceiverPhone" class="form-label">Số Điện Thoại</label>
+                            <input asp-for="ReceiverPhone" class="form-control" />
+                            <span asp-validation-for="ReceiverPhone" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="ReceiverAddress" class="form-label">Địa Chỉ Giao Hàng</label>
+                            <input asp-for="ReceiverAddress" class="form-control" />
+                            <span asp-validation-for="ReceiverAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="CustomerNote" class="form-label">Ghi Chú Của Khách</label>
+                            <textarea asp-for="CustomerNote" class="form-control" rows="2"></textarea>
+                            <span asp-validation-for="CustomerNote" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="section-title"><i class="fas fa-money-bill-wave me-2"></i>Chi Tiết Thanh Toán</div>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label asp-for="Subtotal" class="form-label">Tạm Tính</label>
+                            <input asp-for="Subtotal" class="form-control" type="number" />
+                            <span asp-validation-for="Subtotal" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="DiscountTotal" class="form-label">Giảm Giá</label>
+                            <input asp-for="DiscountTotal" class="form-control" type="number" />
+                            <span asp-validation-for="DiscountTotal" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="TaxTotal" class="form-label">Thuế</label>
+                            <input asp-for="TaxTotal" class="form-control" type="number" />
+                            <span asp-validation-for="TaxTotal" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="ShippingFee" class="form-label">Phí Ship</label>
+                            <input asp-for="ShippingFee" class="form-control" type="number" />
+                            <span asp-validation-for="ShippingFee" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12">
+                            <label asp-for="GrandTotal" class="form-label text-success fw-bold">Tổng Cộng (Grand Total)</label>
+                            <input asp-for="GrandTotal" class="form-control fw-bold border-success text-success" type="number" style="font-size: 1.2rem;" />
+                            <span asp-validation-for="GrandTotal" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-warning text-white btn-lg shadow px-5">
+                            <i class="fas fa-save me-2"></i> Cập Nhật
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

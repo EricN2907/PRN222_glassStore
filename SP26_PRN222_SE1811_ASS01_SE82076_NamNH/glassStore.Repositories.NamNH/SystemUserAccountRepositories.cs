@@ -28,6 +28,13 @@ namespace glassStore.Repositories.NamNH
             //return await _context.SystemUserAccounts.FirstOrDefaultAsync(c => c.UserName == user_name && c.Password == password)
             //     ?? new SystemUserAccount();
         }
+
+        public async Task<SystemUserAccount?> GetUserByEmailAsync(string email)
+        {
+            // Simple, clean data retrieval
+            return await _context.SystemUserAccounts
+                                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
     }
 }
     
