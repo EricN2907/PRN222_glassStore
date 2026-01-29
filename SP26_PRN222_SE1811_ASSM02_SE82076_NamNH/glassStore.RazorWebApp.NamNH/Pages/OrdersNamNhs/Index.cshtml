@@ -1,0 +1,104 @@
+﻿@page
+@model glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs.IndexModel
+
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Danh sách Đơn hàng</h1>
+        <a asp-page="Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Tạo mới đơn hàng
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="orderTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Phương thức</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrdersNamNh)
+                        {
+                            <tr>
+                                <td class="fw-bold text-primary">
+                                    @Html.DisplayFor(modelItem => item.OrderCode)
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span>@item.ReceiverName</span>
+                                        <small class="text-muted">@item.User?.Email</small>
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-success">
+                                    @((item.GrandTotal ?? 0).ToString("N0")) <small>VNĐ</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info text-dark">@item.PaymentMethod</span>
+                                </td>
+                                <td>
+                                    @{
+                                        var statusClass = item.Status switch
+                                        {
+                                            "Completed" => "bg-success",
+                                            "Pending" => "bg-warning text-dark",
+                                            "Cancelled" => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @statusClass">@item.Status</span>
+                                </td>
+                                <td>
+                                    @item.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-page="./Edit" asp-route-id="@item.OrderId" class="btn btn-outline-primary" title="Sửa">
+                                            Edit
+                                        </a>
+                                        <a asp-page="./Details" asp-route-id="@item.OrderId" class="btn btn-outline-info" title="Chi tiết">
+                                            Details
+                                        </a>
+                                        <a asp-page="./Delete" asp-route-id="@item.OrderId" class="btn btn-outline-danger" title="Xóa">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        /* CSS bổ sung để trang trông xịn hơn */
+        .table thead th {
+            border-top: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05rem;
+        }
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.8em;
+        }
+        .btn-group-sm > .btn {
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+}

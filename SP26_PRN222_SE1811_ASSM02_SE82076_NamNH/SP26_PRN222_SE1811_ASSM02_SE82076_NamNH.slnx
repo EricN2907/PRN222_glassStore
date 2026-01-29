@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="glassStore.Entites.NamNH/glassStore.Entites.NamNH.csproj" />
+  <Project Path="glassStore.RazorWebApp.NamNH/glassStore.RazorWebApp.NamNH.csproj" Id="bdb38cff-2981-4e93-bf35-716f4f4878de" />
+  <Project Path="glassStore.Repositories.NamNH/glassStore.Repositories.NamNH.csproj" />
+  <Project Path="glassStore.Service.NamNH/glassStore.Service.NamNH.csproj" />
+</Solution>
