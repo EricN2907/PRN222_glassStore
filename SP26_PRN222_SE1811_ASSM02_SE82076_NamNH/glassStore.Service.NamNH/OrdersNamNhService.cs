@@ -23,7 +23,7 @@ namespace glassStore.Service.NamNH
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -65,7 +65,7 @@ namespace glassStore.Service.NamNH
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int? id)
         {
             try
             {

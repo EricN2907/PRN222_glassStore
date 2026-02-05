@@ -2,114 +2,173 @@
 @model glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update Order";
 }
 
-<h1>Edit</h1>
-
-<h4>OrdersNamNh</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="OrdersNamNh.OrderId" />
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.UserId" class="control-label"></label>
-                <select asp-for="OrdersNamNh.UserId" class="form-control" asp-items="ViewBag.UserId" ></select>
-                <span asp-validation-for="OrdersNamNh.UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.VoucherId" class="control-label"></label>
-                <select asp-for="OrdersNamNh.VoucherId" class="form-control" asp-items="ViewBag.VoucherId" ></select>
-                <span asp-validation-for="OrdersNamNh.VoucherId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.OrderType" class="control-label"></label>
-                <input asp-for="OrdersNamNh.OrderType" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.OrderType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.OrderCode" class="control-label"></label>
-                <input asp-for="OrdersNamNh.OrderCode" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.OrderCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.PaymentMethod" class="control-label"></label>
-                <input asp-for="OrdersNamNh.PaymentMethod" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.PaymentMethod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.Subtotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.Subtotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.Subtotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.DiscountTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.DiscountTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.DiscountTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.TaxTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.TaxTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.TaxTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ShippingFee" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ShippingFee" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ShippingFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.GrandTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.GrandTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.GrandTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.Status" class="control-label"></label>
-                <input asp-for="OrdersNamNh.Status" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.CustomerNote" class="control-label"></label>
-                <input asp-for="OrdersNamNh.CustomerNote" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.CustomerNote" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverName" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverName" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverPhone" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverPhone" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverPhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverAddress" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverAddress" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.CreatedAt" class="control-label"></label>
-                <input asp-for="OrdersNamNh.CreatedAt" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.UpdatedAt" class="control-label"></label>
-                <input asp-for="OrdersNamNh.UpdatedAt" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Edit Order</h1>
+            <p class="text-muted small">Update order information for <strong class="text-primary">@Model.OrdersNamNh.OrderCode</strong></p>
+        </div>
+        <a asp-page="./Index" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left"></i> Back to List
+        </a>
     </div>
-</div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger shadow-sm mb-4" role="alert"></div>
+        <input type="hidden" asp-for="OrdersNamNh.OrderId" />
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">General Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.OrderCode" class="form-label text-muted small">Order Code</label>
+                                <input asp-for="OrdersNamNh.OrderCode" class="form-control bg-light" readonly />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.Status" class="form-label small font-weight-bold">Order Status</label>
+                                <select asp-for="OrdersNamNh.Status" class="form-control form-select">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                                <span asp-validation-for="OrdersNamNh.Status" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.UserId" class="form-label small">Customer</label>
+                                <select asp-for="OrdersNamNh.UserId" class="form-control form-select" asp-items="ViewBag.UserId"></select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.VoucherId" class="form-label small">Voucher Applied</label>
+                                <select asp-for="OrdersNamNh.VoucherId" class="form-control form-select" asp-items="ViewBag.VoucherId">
+                                    <option value="">-- No Voucher --</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.OrderType" class="form-label small">Order Type</label>
+                                <input asp-for="OrdersNamNh.OrderType" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.PaymentMethod" class="form-label small">Payment Method</label>
+                                <input asp-for="OrdersNamNh.PaymentMethod" class="form-control" />
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label asp-for="OrdersNamNh.CustomerNote" class="form-label small">Customer Note</label>
+                                <textarea asp-for="OrdersNamNh.CustomerNote" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-info">Shipping Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.ReceiverName" class="form-label small">Receiver Name</label>
+                                <input asp-for="OrdersNamNh.ReceiverName" class="form-control" />
+                                <span asp-validation-for="OrdersNamNh.ReceiverName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OrdersNamNh.ReceiverPhone" class="form-label small">Phone Number</label>
+                                <input asp-for="OrdersNamNh.ReceiverPhone" class="form-control" />
+                                <span asp-validation-for="OrdersNamNh.ReceiverPhone" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label asp-for="OrdersNamNh.ReceiverAddress" class="form-label small">Address</label>
+                                <input asp-for="OrdersNamNh.ReceiverAddress" class="form-control" />
+                                <span asp-validation-for="OrdersNamNh.ReceiverAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4 border-primary">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h6 class="m-0 font-weight-bold">Order Summary</h6>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.Subtotal" class="form-label small text-muted">Subtotal</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="OrdersNamNh.Subtotal" class="form-control text-end" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.DiscountTotal" class="form-label small text-muted">Discount</label>
+                            <div class="input-group">
+                                <span class="input-group-text text-success">-</span>
+                                <input asp-for="OrdersNamNh.DiscountTotal" class="form-control text-end text-success" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.TaxTotal" class="form-label small text-muted">Tax</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+</span>
+                                <input asp-for="OrdersNamNh.TaxTotal" class="form-control text-end" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.ShippingFee" class="form-label small text-muted">Shipping Fee</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+</span>
+                                <input asp-for="OrdersNamNh.ShippingFee" class="form-control text-end" placeholder="0.00" />
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.GrandTotal" class="form-label font-weight-bold">Grand Total</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-primary text-primary fw-bold">$</span>
+                                <input asp-for="OrdersNamNh.GrandTotal" class="form-control text-end font-weight-bold text-primary border-primary" placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="OrdersNamNh.GrandTotal" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.CreatedAt" class="form-label small text-muted">Created At</label>
+                            <input asp-for="OrdersNamNh.CreatedAt" class="form-control form-control-sm bg-light" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="OrdersNamNh.UpdatedAt" class="form-label small text-muted">Last Updated</label>
+                            <input asp-for="OrdersNamNh.UpdatedAt" class="form-control form-control-sm bg-light" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                        <i class="fa fa-save"></i> Save Changes
+                    </button>
+                    <a asp-page="./Index" class="btn btn-light text-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

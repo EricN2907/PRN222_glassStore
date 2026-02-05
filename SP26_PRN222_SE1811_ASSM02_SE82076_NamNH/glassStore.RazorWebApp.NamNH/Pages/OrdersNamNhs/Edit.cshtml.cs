@@ -1,22 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using glassStore.Entites.NamNH.Models;
+using glassStore.Service.NamNH;
+using glassStore.Service.NamNH.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using glassStore.Entites.NamNH.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
 {
     public class EditModel : PageModel
     {
-        private readonly glassStore.Entites.NamNH.Models.glass_StoreContext _context;
+        //private readonly glassStore.Entites.NamNH.Models.glass_StoreContext _context;
 
-        public EditModel(glassStore.Entites.NamNH.Models.glass_StoreContext context)
+        private readonly IOrdersNamNhService _service;
+        private readonly OrderDetailNamNhService _detail;
+        public EditModel(IOrdersNamNhService service, OrderDetailNamNhService detail)
         {
-            _context = context;
+            _service = service;
+            _detail = detail;
         }
 
         [BindProperty]
@@ -29,14 +35,20 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
                 return NotFound();
             }
 
-            var ordersnamnh =  await _context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == id);
+            //var ordersnamnh =  await _context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == id);
+                
+            var ordersnamnh = await _service.GetByIdAsync(id.Value);
             if (ordersnamnh == null)
             {
                 return NotFound();
             }
             OrdersNamNh = ordersnamnh;
-           ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
-           ViewData["VoucherId"] = new SelectList(_context.VouchersTanTms, "VoucherId", "Code");
+            var orderDetails = await _detail.GetAllAsync();
+            ViewData["order_id"] = new SelectList(orderDetails, "OrderId", "OrderCode");
+            //chỗ này nên theo kiểu : 
+            //            ViewData["order_id"] = new SelectList(orderDetails, "OrderId", "OrderCode","Bảng phụ hoặc user");
+
+            //ViewData["VoucherId"] = new SelectList(_context.VouchersTanTms, "VoucherId", "Code");
             return Page();
         }
 
@@ -48,31 +60,27 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             {
                 return Page();
             }
-
-            _context.Attach(OrdersNamNh).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _service.UpdateAsync(OrdersNamNh);
+                if(result > 0)
+                {
+                    return RedirectToPage("./Index");
+                }
+
             }
-            catch (DbUpdateConcurrencyException)
+           
+            catch (Exception ex)
             {
-                if (!OrdersNamNhExists(OrdersNamNh.OrderId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                ModelState.AddModelError(string.Empty, ex.Message);
             }
-
-            return RedirectToPage("./Index");
+            //return RedirectToPage("./Index");
+            return Page();
         }
 
-        private bool OrdersNamNhExists(int id)
-        {
-            return _context.OrdersNamNhs.Any(e => e.OrderId == id);
-        }
+        //private bool OrdersNamNhExists(int id)
+        //{
+        //    return _context.OrdersNamNhs.Any(e => e.OrderId == id);
+        //}
     }
 }

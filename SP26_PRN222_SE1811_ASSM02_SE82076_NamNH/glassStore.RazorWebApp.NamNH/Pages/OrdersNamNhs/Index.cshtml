@@ -5,75 +5,97 @@
     ViewData["Title"] = "Quản lý đơn hàng";
 }
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Danh sách Đơn hàng</h1>
-        <a asp-page="Create" class="btn btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tạo mới đơn hàng
-        </a>
+<div class="container-fluid py-4 bg-light min-vh-100">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded">
+        <div>
+            <h1 class="h4 mb-0 text-primary fw-bold">
+                <i class="fas fa-box-open me-2"></i>Quản lý Đơn hàng
+            </h1>
+            <small class="text-muted">Xem và quản lý tất cả đơn đặt hàng hệ thống</small>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="d-flex align-items-center px-3 py-2 bg-light rounded-pill border user-badge">
+                    <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2 shadow-sm" style="width: 32px; height: 32px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div style="line-height: 1.2;">
+                        <span class="d-block text-muted" style="font-size: 0.7rem;">Xin chào,</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">@User.Identity.Name</span>
+                    </div>
+                </div>
+            }
+            <a asp-page="Create" class="btn btn-primary d-flex align-items-center shadow-sm btn-create">
+                <i class="fas fa-plus me-2"></i> Tạo đơn mới
+            </a>
+        </div>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle" id="orderTable">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0" id="orderTable">
+                    <thead class="bg-light text-secondary">
                         <tr>
-                            <th>Mã đơn</th>
-                            <th>Khách hàng</th>
-                            <th>Tổng tiền</th>
-                            <th>Phương thức</th>
-                            <th>Trạng thái</th>
-                            <th>Ngày tạo</th>
-                            <th class="text-center">Thao tác</th>
+                            <th class="ps-4 py-3">Mã đơn</th>
+                            <th class="py-3">Khách hàng</th>
+                            <th class="py-3">Tổng tiền</th>
+                            <th class="py-3">Phương thức</th>
+                            <th class="py-3 text-center">Trạng thái</th>
+                            <th class="py-3">Ngày tạo</th>
+                            <th class="py-3 text-end pe-4" style="min-width: 150px;">Thao tác</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="orderTableBody">
                         @foreach (var item in Model.OrdersNamNh)
                         {
-                            <tr>
-                                <td class="fw-bold text-primary">
-                                    @Html.DisplayFor(modelItem => item.OrderCode)
+                            // QUAN TRỌNG: Thêm id vào thẻ tr để SignalR tìm thấy
+                            <tr id="@item.OrderId">
+                                <td class="ps-4 fw-bold text-primary">
+                                    #@Html.DisplayFor(modelItem => item.OrderCode)
                                 </td>
                                 <td>
-                                    <div class="d-flex flex-column">
-                                        <span>@item.ReceiverName</span>
-                                        <small class="text-muted">@item.User?.Email</small>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initial rounded-circle bg-soft-primary text-primary me-3 shadow-sm">
+                                            @(item.ReceiverName?.FirstOrDefault().ToString().ToUpper() ?? "?")
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@item.ReceiverName</div>
+                                            <div class="small text-muted">@item.User?.Email</div>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="fw-bold text-success">
-                                    @((item.GrandTotal ?? 0).ToString("N0")) <small>VNĐ</small>
+                                <td class="fw-bold text-dark">
+                                    @((item.GrandTotal ?? 0).ToString("N0")) <span class="text-muted small">₫</span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-info text-dark">@item.PaymentMethod</span>
-                                </td>
-                                <td>
-                                    @{
-                                        var statusClass = item.Status switch
-                                        {
-                                            "Completed" => "bg-success",
-                                            "Pending" => "bg-warning text-dark",
-                                            "Cancelled" => "bg-danger",
-                                            _ => "bg-secondary"
-                                        };
-                                    }
-                                    <span class="badge @statusClass">@item.Status</span>
-                                </td>
-                                <td>
-                                    @item.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                                    <span class="badge bg-light text-dark border">@item.PaymentMethod</span>
                                 </td>
                                 <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a asp-page="./Edit" asp-route-id="@item.OrderId" class="btn btn-outline-primary" title="Sửa">
-                                            Edit
-                                        </a>
-                                        <a asp-page="./Details" asp-route-id="@item.OrderId" class="btn btn-outline-info" title="Chi tiết">
-                                            Details
-                                        </a>
-                                        <a asp-page="./Delete" asp-route-id="@item.OrderId" class="btn btn-outline-danger" title="Xóa">
-                                            Delete
-                                        </a>
-                                    </div>
+                                    @{
+                                        var (statusClass, icon) = item.Status switch
+                                        {
+                                            "Completed" => ("bg-soft-success text-success", "fa-check-circle"),
+                                            "Pending" => ("bg-soft-warning text-warning", "fa-clock"),
+                                            "Processing" => ("bg-soft-info text-info", "fa-spinner"),
+                                            "Cancelled" => ("bg-soft-danger text-danger", "fa-times-circle"),
+                                            _ => ("bg-soft-secondary text-secondary", "fa-question-circle")
+                                        };
+                                    }
+                                    <span class="badge @statusClass rounded-pill px-3 py-2 status-badge">
+                                        <i class="fas @icon me-1"></i> @item.Status
+                                    </span>
+                                </td>
+                                <td class="text-muted small">
+                                    <div><i class="far fa-calendar-alt me-1"></i> @item.CreatedAt?.ToString("dd/MM/yyyy")</div>
+                                    <div class="mt-1"><i class="far fa-clock me-1"></i> @item.CreatedAt?.ToString("HH:mm")</div>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-page="./Edit" asp-route-id="@item.OrderId" class="btn btn-icon btn-light text-primary me-2"><i class="fas fa-pen"></i></a>
+                                    <a asp-page="./Details" asp-route-id="@item.OrderId" class="btn btn-icon btn-light text-info me-2"><i class="fas fa-eye"></i></a>
+                                    <a asp-page="./Delete" asp-route-id="@item.OrderId" class="btn btn-icon btn-light text-danger"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>
                         }
@@ -86,19 +108,86 @@
 
 @section Scripts {
     <style>
-        /* CSS bổ sung để trang trông xịn hơn */
-        .table thead th {
-            border-top: none;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.05rem;
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            transition: all 0.2s ease;
         }
-        .badge {
-            font-weight: 500;
-            padding: 0.5em 0.8em;
+
+            .btn-icon:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
         }
-        .btn-group-sm > .btn {
-            padding: 0.25rem 0.5rem;
+
+        .bg-soft-success {
+            background-color: rgba(25, 135, 84, 0.1);
+            color: #198754;
+        }
+
+        .bg-soft-warning {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #856404;
+        }
+
+        .bg-soft-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .bg-soft-info {
+            background-color: rgba(13, 202, 240, 0.1);
+            color: #098da8;
+        }
+
+        .avatar-initial {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
         }
     </style>
+
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        "use strict";
+        var connection = new signalR.HubConnectionBuilder().withUrl("/glassStore_Hub").build();
+
+        connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
+            console.log("Xác nhận xóa dòng ID:", orderId);
+            $(`tr[id='${orderId}']`).fadeOut(500, function() {
+                $(this).remove();
+            });
+        });
+
+        connection.on("ReceiveCreate_OrdersNamNH", function (newOrder) {
+            console.log("Đơn hàng mới tạo:", newOrder);
+            
+            var notification = document.createElement("div");
+            notification.className = "alert alert-success position-fixed top-0 end-0 m-3 shadow";
+            notification.style.zIndex = "9999";
+            notification.innerHTML = `<i class="fas fa-check-circle me-2"></i> Có đơn hàng mới! Đang cập nhật...`;
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                location.reload(); 
+            }, 1000);
+        });
+
+        connection.start().then(function () {
+            console.log("NamNH Index: SignalR Connected");
+        }).catch(err => console.error(err.toString()));
+    </script>
 }

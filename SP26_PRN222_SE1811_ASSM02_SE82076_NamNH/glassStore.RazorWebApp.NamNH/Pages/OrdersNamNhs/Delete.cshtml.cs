@@ -5,17 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using glassStore.RazorWebApp.NamNH.Hubs;
 using glassStore.Entites.NamNH.Models;
+using glassStore.Service.NamNH;
+using glassStore.Service.NamNH.Interface;
 
 namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
 {
     public class DeleteModel : PageModel
     {
-        private readonly glassStore.Entites.NamNH.Models.glass_StoreContext _context;
 
-        public DeleteModel(glassStore.Entites.NamNH.Models.glass_StoreContext context)
+        private readonly IOrdersNamNhService _service;
+        private readonly OrderDetailNamNhService _details;
+        private readonly IHubContext<glassStore_Hub> _hubContext;
+
+        public DeleteModel(IOrdersNamNhService service, OrderDetailNamNhService detail, IHubContext<glassStore_Hub> hubContext)
         {
-            _context = context;
+            _service = service;
+            _details = detail;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -28,17 +37,15 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
                 return NotFound();
             }
 
-            var ordersnamnh = await _context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == id);
+            //var ordersnamnh = await _context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == id);
+            var result = await _service.GetByIdAsync(id);
 
-            if (ordersnamnh == null)
+            if (result == null)
             {
                 return NotFound();
             }
-            else
-            {
-                OrdersNamNh = ordersnamnh;
-            }
-            return Page();
+            OrdersNamNh = result;
+            return Page();  
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
@@ -47,16 +54,17 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             {
                 return NotFound();
             }
+            var result = await _service.DeleteAsync(id);
 
-            var ordersnamnh = await _context.OrdersNamNhs.FindAsync(id);
-            if (ordersnamnh != null)
+            if (!result)
             {
-                OrdersNamNh = ordersnamnh;
-                _context.OrdersNamNhs.Remove(OrdersNamNh);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-
-            return RedirectToPage("./Index");
+            else
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveDelete_OrdersNamNH", id);
+                return RedirectToPage("./Index");
+            }
         }
     }
 }

@@ -4,6 +4,8 @@ using glassStore.Service.NamNH.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
+using glassStore.RazorWebApp.NamNH.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +14,18 @@ using static NuGet.Packaging.PackagingConstants;
 
 namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
 {
+
     public class CreateModel : PageModel
     {
         private readonly IOrdersNamNhService _service;
         private readonly Order_Detail_NamNHRepositories _serviceSub;
-        public CreateModel(IOrdersNamNhService service, Order_Detail_NamNHRepositories repo)
+        private readonly IHubContext<glassStore_Hub> _hubContext;
+
+        public CreateModel(IOrdersNamNhService service, Order_Detail_NamNHRepositories repo, IHubContext<glassStore_Hub> hubContext)
         {
             _service = service;
             _serviceSub = repo;
+            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> OnGet()
@@ -47,11 +53,14 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             var result = await _service.CreateAsync(OrdersNamNh);
             if (result > 0)
             {
+                await _hubContext.Clients.All.SendAsync("ReceiveCreate_OrdersNamNH", OrdersNamNh);
+                return RedirectToPage("./Index");
+            }
+            else
+            {
                 ModelState.AddModelError(string.Empty, "Create Failed");
                 return Page();
             }
-
-            return RedirectToPage("./Index");
         }
     }
 }

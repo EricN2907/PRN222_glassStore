@@ -1,107 +1,156 @@
 ﻿@page
 @model glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Order";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">🛒 Create New Order</h4>
+                </div>
 
-<h4>OrdersNamNh</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.UserId" class="control-label"></label>
-                <select asp-for="OrdersNamNh.UserId" class ="form-control" asp-items="ViewBag.UserId" ></select>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <!-- LEFT COLUMN -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Order Information</h6>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.UserId" class="form-label"></label>
+                                    <select asp-for="OrdersNamNh.UserId"
+                                            class="form-select"
+                                            asp-items="ViewBag.UserId">
+                                        <option value="">-- Select User --</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.VoucherId" class="form-label"></label>
+                                    <select asp-for="OrdersNamNh.VoucherId"
+                                            class="form-select"
+                                            asp-items="ViewBag.VoucherId">
+                                        <option value="">-- No Voucher --</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.OrderType" class="form-label"></label>
+                                    <input asp-for="OrdersNamNh.OrderType" class="form-control" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.OrderCode" class="form-label"></label>
+                                    <input asp-for="OrdersNamNh.OrderCode" class="form-control" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.PaymentMethod" class="form-label"></label>
+                                    <select asp-for="OrdersNamNh.PaymentMethod" class="form-select">
+                                        <option>COD</option>
+                                        <option>Banking</option>
+                                        <option>VNPay</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.Status" class="form-label"></label>
+                                    <select asp-for="OrdersNamNh.Status" class="form-select">
+                                        <option>Pending</option>
+                                        <option>Paid</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT COLUMN -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">Receiver & Payment</h6>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.ReceiverName" class="form-label"></label>
+                                    <input asp-for="OrdersNamNh.ReceiverName" class="form-control" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.ReceiverPhone" class="form-label"></label>
+                                    <input asp-for="OrdersNamNh.ReceiverPhone" class="form-control" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.ReceiverAddress" class="form-label"></label>
+                                    <textarea asp-for="OrdersNamNh.ReceiverAddress"
+                                              class="form-control"
+                                              rows="2"></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="OrdersNamNh.Subtotal" class="form-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₫</span>
+                                            <input asp-for="OrdersNamNh.Subtotal" class="form-control" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="OrdersNamNh.DiscountTotal" class="form-label"></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₫</span>
+                                            <input asp-for="OrdersNamNh.DiscountTotal" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="OrdersNamNh.TaxTotal" class="form-label"></label>
+                                        <input asp-for="OrdersNamNh.TaxTotal" class="form-control" />
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="OrdersNamNh.ShippingFee" class="form-label"></label>
+                                        <input asp-for="OrdersNamNh.ShippingFee" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.GrandTotal" class="form-label fw-bold"></label>
+                                    <input asp-for="OrdersNamNh.GrandTotal"
+                                           class="form-control fw-bold text-success" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="OrdersNamNh.CustomerNote" class="form-label"></label>
+                                    <textarea asp-for="OrdersNamNh.CustomerNote"
+                                              class="form-control"
+                                              rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-4">
+                            <a asp-page="Index" class="btn btn-outline-secondary me-2">
+                                ← Back
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                ✅ Create Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.VoucherId" class="control-label"></label>
-                <select asp-for="OrdersNamNh.VoucherId" class ="form-control" asp-items="ViewBag.VoucherId" ></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.OrderType" class="control-label"></label>
-                <input asp-for="OrdersNamNh.OrderType" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.OrderType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.OrderCode" class="control-label"></label>
-                <input asp-for="OrdersNamNh.OrderCode" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.OrderCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.PaymentMethod" class="control-label"></label>
-                <input asp-for="OrdersNamNh.PaymentMethod" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.PaymentMethod" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.Subtotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.Subtotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.Subtotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.DiscountTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.DiscountTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.DiscountTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.TaxTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.TaxTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.TaxTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ShippingFee" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ShippingFee" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ShippingFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.GrandTotal" class="control-label"></label>
-                <input asp-for="OrdersNamNh.GrandTotal" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.GrandTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.Status" class="control-label"></label>
-                <input asp-for="OrdersNamNh.Status" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.CustomerNote" class="control-label"></label>
-                <input asp-for="OrdersNamNh.CustomerNote" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.CustomerNote" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverName" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverName" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverPhone" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverPhone" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverPhone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.ReceiverAddress" class="control-label"></label>
-                <input asp-for="OrdersNamNh.ReceiverAddress" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.ReceiverAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OrdersNamNh.UpdatedAt" class="control-label"></label>
-                <input asp-for="OrdersNamNh.UpdatedAt" class="form-control" />
-                <span asp-validation-for="OrdersNamNh.UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

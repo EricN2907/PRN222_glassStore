@@ -19,6 +19,6 @@ namespace glassStore.Service.NamNH.Interface
         //
         Task<int> UpdateAsync(OrdersNamNh orders);
         //
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int? id);
     }
 }
