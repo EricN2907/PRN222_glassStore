@@ -10,6 +10,8 @@ using glassStore.Service.NamNH.Interface;
 using glassStore.Service.NamNH;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using glassStore.MVCWebApp.NamNH.Hubs;
 
 namespace glassStore.MVCWebApp.NamNH.Controllers
 {
@@ -18,15 +20,14 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
         //private readonly glass_StoreContext _context;
         private readonly IOrdersNamNhService _orders;
         private readonly OrderDetailNamNhService _orderDetails;
-        //public OrdersNamNhsController(glass_StoreContext context)
-        //{
-        //    _context = context;
-        //}
-        public OrdersNamNhsController(IOrdersNamNhService ordersNamNhService, OrderDetailNamNhService orderDetailNamNh) 
-            {
-            _orders ??= new OrdersNamNhService();
-            _orderDetails ??= new OrderDetailNamNhService();
-            }
+        private readonly IHubContext<glassStore_Hub> _hubContext;
+
+        public OrdersNamNhsController(IOrdersNamNhService ordersNamNhService, OrderDetailNamNhService orderDetailNamNh, IHubContext<glassStore_Hub> hubContext) 
+        {
+            _orders = ordersNamNhService ?? new OrdersNamNhService();
+            _orderDetails = orderDetailNamNh ?? new OrderDetailNamNhService();
+            _hubContext = hubContext;
+        }
 
 
         // GET: OrdersNamNhs
@@ -72,6 +73,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
                 var result = await _orders.CreateAsync(ordersNamNh);
                 if (result > 0)
                 {
+                    await _hubContext.Clients.All.SendAsync("ReceiveCreate_OrdersNamNH", ordersNamNh);
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -162,6 +164,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 
             if (result)
             {
+                await _hubContext.Clients.All.SendAsync("ReceiveDelete_OrdersNamNH", id);
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Delete), new { id = id });

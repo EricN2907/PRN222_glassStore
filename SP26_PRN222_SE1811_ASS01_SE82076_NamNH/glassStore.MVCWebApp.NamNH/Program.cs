@@ -3,6 +3,7 @@ using glassStore.Service.NamNH;
 using glassStore.Service.NamNH.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using glassStore.MVCWebApp.NamNH.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<glass_StoreContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Add SignalR
+builder.Services.AddSignalR();
+
 // Add depenency injection
 builder.Services.AddScoped<IOrdersNamNhService, OrdersNamNhService>();
 builder.Services.AddScoped<OrderDetailNamNhService>();
@@ -48,5 +53,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<glassStore_Hub>("/glassStore_Hub");
 
 app.Run();
