@@ -5,7 +5,7 @@
     ViewData["Title"] = "Order Details";
 }
 
-<div class="container mt-4">
+<div class="container mt-4" id="Order_id">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card shadow border-0">
@@ -15,6 +15,7 @@
                     <div>
                         <h4 class="mb-0">🧾 Order Details</h4>
                         <small>Order Code: <strong>@Model.OrdersNamNh.OrderCode</strong></small>
+                        @Html.HiddenFor(model => model.OrdersNamNh.OrderId)
                     </div>
 
                     <span class="badge
@@ -130,3 +131,49 @@
         </div>
     </div>
 </div>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/glassStore_Hub").build();
+
+    connection.start().then(function () {
+        console.log("NamNH Details: Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    // Lấy ID đơn hàng hiện tại đang xem thông qua Razor
+    var currentOrderId = parseInt("@Model.OrdersNamNh.OrderId");
+
+    connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
+        // Kiểm tra nếu ID đơn hàng bị xóa chính là đơn hàng đang mở
+        if (currentOrderId === parseInt(orderId)) {
+            // Xóa sạch nội dung chi tiết và hiển thị cảnh báo
+            document.getElementById("Order_id").innerHTML = `
+                <div class="alert alert-danger text-center shadow-sm p-5 mt-5">
+                    <h4 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Yikes! Đơn hàng đã bị xóa</h4>
+                    <p class="text-muted mt-3">Đơn hàng này vừa bị xóa khỏi hệ thống. Bạn không thể tiếp tục xem chi tiết.</p>
+                    <a href="./Index" class="btn btn-outline-danger mt-3">← Quay lại danh sách</a>
+                </div>
+            `;
+        }
+        // Bỏ else block vì nếu orderId khác, ta cứ bơ đi, không cần làm phiền người dùng.
+    });
+
+    connection.on("ReceiveUpdate_OrdersNamNH", function (updatedOrder) {
+        var orderIdFromUpdate = updatedOrder.orderId || updatedOrder.OrderId;
+        if (currentOrderId === parseInt(orderIdFromUpdate)) {
+            var notification = document.createElement("div");
+            notification.className = "alert alert-info position-fixed top-0 end-0 m-3 shadow";
+            notification.style.zIndex = "9999";
+            notification.innerHTML = `<i class="fas fa-info-circle me-2"></i> Đơn hàng vừa được cập nhật! Đang tải lại dữ liệu...`;
+            document.body.appendChild(notification);
+            
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
+        }
+    });
+
+</script>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-glassStore.WorkerService.NamNH-3f07e503-6f07-4a6f-b80e-a3f7e0a8c57b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\glassStore.Repositories.NamNH\glassStore.Repositories.NamNH.csproj" />
+    <ProjectReference Include="..\glassStore.Service.NamNH\glassStore.Service.NamNH.csproj" />
+  </ItemGroup>
+</Project>

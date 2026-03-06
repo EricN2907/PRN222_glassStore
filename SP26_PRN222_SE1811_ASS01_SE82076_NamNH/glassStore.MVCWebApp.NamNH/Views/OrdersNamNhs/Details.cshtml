@@ -72,13 +72,14 @@
     }
 </style>
 
-<div class="container py-4">
+<div class="container py-4" id="Order_id">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="page-header text-uppercase">
             <i class="fas fa-file-invoice me-2 text-info"></i> Chi Tiết Đơn Hàng
         </h2>
         <div>
             <a asp-action="Edit" asp-route-id="@Model?.OrderId" class="btn btn-warning text-white shadow-sm me-2">
+                @Html.HiddenFor(model => model.OrderId)
                 <i class="fas fa-pen me-1"></i> Chỉnh sửa
             </a>
             <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
@@ -217,3 +218,30 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/glassStore_Hub").build();
+
+    connection.start().then(function () {
+        console.log("NamNH: Connected to the SignalR Hub");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
+        //alert($(`#${CashDepositSlipId}`).value);
+
+        var OrderHidden = document.getElementById("Order_id").value;
+
+        if (OrderHidden == orderId) {
+            document.getElementById("Order_id").innerHTML = "This item had deleted";
+        } else {
+            alert(CashDepositSlipId + " not found");
+        }
+    });
+
+
+</script>

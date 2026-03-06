@@ -19,13 +19,11 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
     {
         private readonly IOrdersNamNhService _service;
         private readonly Order_Detail_NamNHRepositories _serviceSub;
-        private readonly IHubContext<glassStore_Hub> _hubContext;
 
-        public CreateModel(IOrdersNamNhService service, Order_Detail_NamNHRepositories repo, IHubContext<glassStore_Hub> hubContext)
+        public CreateModel(IOrdersNamNhService service, Order_Detail_NamNHRepositories repo)
         {
             _service = service;
             _serviceSub = repo;
-            _hubContext = hubContext;
         }
 
         public async Task<IActionResult> OnGet()
@@ -53,7 +51,6 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             var result = await _service.CreateAsync(OrdersNamNh);
             if (result > 0)
             {
-                await _hubContext.Clients.All.SendAsync("ReceiveCreate_OrdersNamNH", OrdersNamNh);
                 return RedirectToPage("./Index");
             }
             else

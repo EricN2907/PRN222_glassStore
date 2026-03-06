@@ -18,13 +18,11 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
 
         private readonly IOrdersNamNhService _service;
         private readonly OrderDetailNamNhService _details;
-        private readonly IHubContext<glassStore_Hub> _hubContext;
 
-        public DeleteModel(IOrdersNamNhService service, OrderDetailNamNhService detail, IHubContext<glassStore_Hub> hubContext)
+        public DeleteModel(IOrdersNamNhService service, OrderDetailNamNhService detail)
         {
             _service = service;
             _details = detail;
-            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -62,7 +60,6 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             }
             else
             {
-                await _hubContext.Clients.All.SendAsync("ReceiveDelete_OrdersNamNH", id);
                 return RedirectToPage("./Index");
             }
         }

@@ -160,6 +160,9 @@
                     <button type="submit" class="btn btn-primary btn-lg shadow-sm">
                         <i class="fa fa-save"></i> Save Changes
                     </button>
+                    <button type="button" id="btnHubUpdate" class="btn btn-warning btn-lg shadow-sm">
+                        <i class="fas fa-wifi"></i> Update By SignalR
+                    </button>
                     <a asp-page="./Index" class="btn btn-light text-secondary">Cancel</a>
                 </div>
             </div>
@@ -171,4 +174,88 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        "use strict";
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/glassStore_Hub").build();
+
+        connection.on("UpdateSuccess", function () {
+            alert("Hệ thống: Đã cập nhật đơn hàng thành công qua SignalR!");
+            window.location.href = "/OrdersNamNhs/Index";
+        });
+
+        connection.on("ReceiveErrorNamNH", function (msg) {
+            alert("Lỗi: " + msg);
+        });
+
+        connection.start().then(function () {
+            console.log("NamNH Edit: Connected to the SignalR Hub");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        var currentOrderId = parseInt("@Model.OrdersNamNh.OrderId");
+
+        connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
+            if (currentOrderId === parseInt(orderId)) {
+                var btnSb = document.querySelector('button[type="submit"]');
+                if(btnSb) btnSb.disabled = true;
+                
+                var notification = document.createElement("div");
+                notification.className = "alert alert-danger position-fixed top-0 end-0 m-3 shadow";
+                notification.style.zIndex = "9999";
+                notification.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> Đơn hàng này vừa bị xóa! Không thể lưu thay đổi.`;
+                document.body.appendChild(notification);
+            }
+        });
+
+        connection.on("ReceiveUpdate_OrdersNamNH", function (updatedOrder) {
+            var orderIdFromUpdate = updatedOrder.orderId || updatedOrder.OrderId;
+            if (currentOrderId === parseInt(orderIdFromUpdate)) {
+                var notification = document.createElement("div");
+                notification.className = "alert alert-warning position-fixed top-0 end-0 m-3 shadow alert-dismissible fade show";
+                notification.style.zIndex = "9999";
+                notification.innerHTML = `
+                    <i class="fas fa-exclamation-triangle me-2"></i> Đơn hàng này vừa được cập nhật ở nơi khác!
+                    <button class="btn btn-sm btn-outline-dark ms-2" onclick="location.reload()">Tải lại trang</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.body.appendChild(notification);
+            }
+        });
+
+        var btnHubUpdate = document.getElementById("btnHubUpdate");
+        if (btnHubUpdate) {
+            btnHubUpdate.addEventListener("click", function (event) {
+                event.preventDefault();
+                
+                var formObj = {
+                    OrderId: currentOrderId,
+                    OrderCode: document.getElementById("OrdersNamNh_OrderCode").value,
+                    Status: document.getElementById("OrdersNamNh_Status").value,
+                    UserId: parseInt(document.getElementById("OrdersNamNh_UserId").value) || null,
+                    VoucherId: parseInt(document.getElementById("OrdersNamNh_VoucherId").value) || null,
+                    OrderType: document.getElementById("OrdersNamNh_OrderType").value,
+                    PaymentMethod: document.getElementById("OrdersNamNh_PaymentMethod").value,
+                    CustomerNote: document.getElementById("OrdersNamNh_CustomerNote").value,
+                    ReceiverName: document.getElementById("OrdersNamNh_ReceiverName").value,
+                    ReceiverPhone: document.getElementById("OrdersNamNh_ReceiverPhone").value,
+                    ReceiverAddress: document.getElementById("OrdersNamNh_ReceiverAddress").value,
+                    Subtotal: parseFloat(document.getElementById("OrdersNamNh_Subtotal").value) || 0,
+                    DiscountTotal: parseFloat(document.getElementById("OrdersNamNh_DiscountTotal").value) || 0,
+                    TaxTotal: parseFloat(document.getElementById("OrdersNamNh_TaxTotal").value) || 0,
+                    ShippingFee: parseFloat(document.getElementById("OrdersNamNh_ShippingFee").value) || 0,
+                    GrandTotal: parseFloat(document.getElementById("OrdersNamNh_GrandTotal").value) || 0,
+                    CreatedAt: document.getElementById("OrdersNamNh_CreatedAt").value || null,
+                    UpdatedAt: document.getElementById("OrdersNamNh_UpdatedAt").value || null
+                };
+
+                connection.invoke("hubUpdate_OrdersNamNH", formObj)
+                    .catch(function (err) {
+                        console.error(err.toString());
+                    });
+            });
+        }
+    </script>
 }
