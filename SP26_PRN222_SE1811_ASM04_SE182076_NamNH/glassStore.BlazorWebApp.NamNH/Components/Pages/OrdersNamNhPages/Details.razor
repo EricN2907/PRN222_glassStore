@@ -1,0 +1,78 @@
+﻿@page "/ordersnamnhs/details"
+@using Microsoft.EntityFrameworkCore
+@using glassStore.Entites.NamNH.Models
+@inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>OrdersNamNh</h2>
+    <hr />
+    @if (ordersnamnh is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@ordersnamnh.UserId</dd>
+            <dt class="col-sm-2">VoucherId</dt>
+            <dd class="col-sm-10">@ordersnamnh.VoucherId</dd>
+            <dt class="col-sm-2">OrderType</dt>
+            <dd class="col-sm-10">@ordersnamnh.OrderType</dd>
+            <dt class="col-sm-2">OrderCode</dt>
+            <dd class="col-sm-10">@ordersnamnh.OrderCode</dd>
+            <dt class="col-sm-2">PaymentMethod</dt>
+            <dd class="col-sm-10">@ordersnamnh.PaymentMethod</dd>
+            <dt class="col-sm-2">Subtotal</dt>
+            <dd class="col-sm-10">@ordersnamnh.Subtotal</dd>
+            <dt class="col-sm-2">DiscountTotal</dt>
+            <dd class="col-sm-10">@ordersnamnh.DiscountTotal</dd>
+            <dt class="col-sm-2">TaxTotal</dt>
+            <dd class="col-sm-10">@ordersnamnh.TaxTotal</dd>
+            <dt class="col-sm-2">ShippingFee</dt>
+            <dd class="col-sm-10">@ordersnamnh.ShippingFee</dd>
+            <dt class="col-sm-2">GrandTotal</dt>
+            <dd class="col-sm-10">@ordersnamnh.GrandTotal</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@ordersnamnh.Status</dd>
+            <dt class="col-sm-2">CustomerNote</dt>
+            <dd class="col-sm-10">@ordersnamnh.CustomerNote</dd>
+            <dt class="col-sm-2">ReceiverName</dt>
+            <dd class="col-sm-10">@ordersnamnh.ReceiverName</dd>
+            <dt class="col-sm-2">ReceiverPhone</dt>
+            <dd class="col-sm-10">@ordersnamnh.ReceiverPhone</dd>
+            <dt class="col-sm-2">ReceiverAddress</dt>
+            <dd class="col-sm-10">@ordersnamnh.ReceiverAddress</dd>
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@ordersnamnh.CreatedAt</dd>
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@ordersnamnh.UpdatedAt</dd>
+        </dl>
+        <div>
+            <a href="@($"/ordersnamnhs/edit?orderid={ordersnamnh.OrderId}")">Edit</a> |
+            <a href="@($"/ordersnamnhs")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private OrdersNamNh? ordersnamnh;
+
+    [SupplyParameterFromQuery]
+    private int OrderId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ordersnamnh = await context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == OrderId);
+
+        if (ordersnamnh is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

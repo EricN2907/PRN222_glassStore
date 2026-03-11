@@ -1,0 +1,169 @@
+﻿@page "/ordersnamnhs/edit"
+@using Microsoft.EntityFrameworkCore
+@using glassStore.Entites.NamNH.Models
+@inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>OrdersNamNh</h2>
+<hr />
+@if (OrdersNamNh is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="OrdersNamNh" OnValidSubmit="UpdateOrdersNamNh" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="OrdersNamNh.OrderId" value="@OrdersNamNh.OrderId" />
+                <div class="mb-3">
+                    <label for="userid" class="form-label">UserId:</label>
+                    <InputNumber id="userid" @bind-Value="OrdersNamNh.UserId" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.UserId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="voucherid" class="form-label">VoucherId:</label>
+                    <InputNumber id="voucherid" @bind-Value="OrdersNamNh.VoucherId" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.VoucherId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ordertype" class="form-label">OrderType:</label>
+                    <InputText id="ordertype" @bind-Value="OrdersNamNh.OrderType" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.OrderType" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="ordercode" class="form-label">OrderCode:</label>
+                    <InputText id="ordercode" @bind-Value="OrdersNamNh.OrderCode" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.OrderCode" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="paymentmethod" class="form-label">PaymentMethod:</label>
+                    <InputText id="paymentmethod" @bind-Value="OrdersNamNh.PaymentMethod" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.PaymentMethod" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="subtotal" class="form-label">Subtotal:</label>
+                    <InputNumber id="subtotal" @bind-Value="OrdersNamNh.Subtotal" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.Subtotal" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="discounttotal" class="form-label">DiscountTotal:</label>
+                    <InputNumber id="discounttotal" @bind-Value="OrdersNamNh.DiscountTotal" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.DiscountTotal" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="taxtotal" class="form-label">TaxTotal:</label>
+                    <InputNumber id="taxtotal" @bind-Value="OrdersNamNh.TaxTotal" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.TaxTotal" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="shippingfee" class="form-label">ShippingFee:</label>
+                    <InputNumber id="shippingfee" @bind-Value="OrdersNamNh.ShippingFee" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.ShippingFee" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="grandtotal" class="form-label">GrandTotal:</label>
+                    <InputNumber id="grandtotal" @bind-Value="OrdersNamNh.GrandTotal" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.GrandTotal" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <InputText id="status" @bind-Value="OrdersNamNh.Status" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.Status" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="customernote" class="form-label">CustomerNote:</label>
+                    <InputText id="customernote" @bind-Value="OrdersNamNh.CustomerNote" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.CustomerNote" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="receivername" class="form-label">ReceiverName:</label>
+                    <InputText id="receivername" @bind-Value="OrdersNamNh.ReceiverName" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.ReceiverName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="receiverphone" class="form-label">ReceiverPhone:</label>
+                    <InputText id="receiverphone" @bind-Value="OrdersNamNh.ReceiverPhone" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.ReceiverPhone" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="receiveraddress" class="form-label">ReceiverAddress:</label>
+                    <InputText id="receiveraddress" @bind-Value="OrdersNamNh.ReceiverAddress" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.ReceiverAddress" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdat" class="form-label">CreatedAt:</label>
+                    <InputDate id="createdat" @bind-Value="OrdersNamNh.CreatedAt" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.CreatedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedat" class="form-label">UpdatedAt:</label>
+                    <InputDate id="updatedat" @bind-Value="OrdersNamNh.UpdatedAt" class="form-control" />
+                    <ValidationMessage For="() => OrdersNamNh.UpdatedAt" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/ordersnamnhs">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int OrderId { get; set; }
+
+    [SupplyParameterFromForm]
+    private OrdersNamNh? OrdersNamNh { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        OrdersNamNh ??= await context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == OrderId);
+
+        if (OrdersNamNh is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateOrdersNamNh()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(OrdersNamNh!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!OrdersNamNhExists(OrdersNamNh!.OrderId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/ordersnamnhs");
+    }
+
+    private bool OrdersNamNhExists(int orderid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.OrdersNamNhs.Any(e => e.OrderId == orderid);
+    }
+}

@@ -1,0 +1,65 @@
+﻿@page "/ordersnamnhs"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using glassStore.Entites.NamNH.Models
+@using glassStore.Service.NamNH.Interface
+@implements IAsyncDisposable
+@inject IOrdersNamNhService _ordersNamNhService;
+@* @inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory *@
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="ordersnamnhs/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="ordersNamNhs">
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.UserId" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.VoucherId" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.OrderType" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.OrderCode" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.PaymentMethod" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.Subtotal" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.DiscountTotal" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.TaxTotal" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.ShippingFee" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.GrandTotal" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.Status" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.CustomerNote" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverName" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverPhone" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverAddress" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.CreatedAt" />
+    <PropertyColumn Property="ordersnamnh => ordersnamnh.UpdatedAt" />
+
+    <TemplateColumn Context="ordersnamnh">
+        <a href="@($"ordersnamnhs/edit?orderid={ordersnamnh.OrderId}")">Edit</a> |
+        <a href="@($"ordersnamnhs/details?orderid={ordersnamnh.OrderId}")">Details</a> |
+        <a href="@($"ordersnamnhs/delete?orderid={ordersnamnh.OrderId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    // private glass_StoreContext context = default!;
+    private IQueryable<OrdersNamNh> ordersNamNhs = default;
+
+ 
+
+    protected override async Task OnInitializedAsync()
+    {
+        // context = DbFactory.CreateDbContext();
+        try
+        {
+            ordersNamNhs = (await _ordersNamNhService.GetAllAsync()).AsQueryable();
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+}

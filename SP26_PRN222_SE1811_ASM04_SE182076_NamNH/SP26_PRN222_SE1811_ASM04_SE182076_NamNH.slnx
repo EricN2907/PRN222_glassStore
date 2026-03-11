@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="glassStore.BlazorWebApp.NamNH/glassStore.BlazorWebApp.NamNH.csproj" Id="1bfd3872-4193-4ec3-a167-7944ffee7216" />
+  <Project Path="glassStore.Entites.NamNH/glassStore.Entites.NamNH.csproj" />
+  <Project Path="glassStore.Repositories.NamNH/glassStore.Repositories.NamNH.csproj" />
+  <Project Path="glassStore.Service.NamNH/glassStore.Service.NamNH.csproj" />
+</Solution>
