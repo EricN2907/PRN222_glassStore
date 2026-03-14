@@ -31,13 +31,13 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 
 
         // GET: OrdersNamNhs
-        [Authorize(Roles = "1, 2")]
+       // [Authorize(Roles = "1, 2")]
         public async Task<IActionResult> Index(string order_code, string phone_number, string product_name)
         {
             var items = await _orders.SearchAsync(order_code,phone_number,product_name);
             return View(items);
         }
-        [Authorize(Roles = "1, 2")]
+       // [Authorize(Roles = "1, 2")]
         // GET: OrdersNamNhs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -47,7 +47,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
             if (order == null) return NotFound();
             return View(order);
         }
-        [Authorize(Roles = "1, 2")]
+      //  [Authorize(Roles = "1, 2")]
         // GET: OrdersNamNhs/Create
         public async Task<IActionResult> Create()
         {
@@ -65,7 +65,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "1, 2")]
+      //  [Authorize(Roles = "1, 2")]
         public async Task<IActionResult> Create(OrdersNamNh ordersNamNh)
         {
             if (ModelState.IsValid)
@@ -87,7 +87,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
             return View(ordersNamNh);
         }
 
-        [Authorize(Roles = "1")]
+      //  [Authorize(Roles = "1")]
         public async Task<IActionResult> Edit(int id) { 
         
             if(id == null)
@@ -108,7 +108,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "1")] 
+       // [Authorize(Roles = "1")] 
         public async Task<IActionResult> Edit(int id, OrdersNamNh ordersNamNh)
         {
             if (ModelState.IsValid)
@@ -134,7 +134,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 
 
         // GET: OrdersNamNhs/Delete/5
-        [Authorize(Roles = "1")]
+       // [Authorize(Roles = "1")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,7 +156,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
         //POST: OrdersNamNhs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "1")]
+        ///[Authorize(Roles = "1")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
            

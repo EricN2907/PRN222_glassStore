@@ -1,8 +1,9 @@
 ﻿@page "/ordersnamnhs/delete"
 @using Microsoft.EntityFrameworkCore
 @using glassStore.Entites.NamNH.Models
-@inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory
 @inject NavigationManager NavigationManager
+@using glassStore.Service.NamNH.Interface
+@inject IOrdersNamNhService OrdersService
 
 <PageTitle>Delete</PageTitle>
 
@@ -100,8 +101,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        ordersnamnh = await context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == OrderId);
+        ordersnamnh = await OrdersService.GetByIdAsync(OrderId);
 
         if (ordersnamnh is null)
         {
@@ -111,9 +111,7 @@
 
     private async Task DeleteOrdersNamNh()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.OrdersNamNhs.Remove(ordersnamnh!);
-        await context.SaveChangesAsync();
+        await OrdersService.DeleteAsync(OrderId);
         NavigationManager.NavigateTo("/ordersnamnhs");
     }
 }
