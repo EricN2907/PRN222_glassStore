@@ -20,6 +20,8 @@ builder.Services.AddDbContext<glass_StoreContext>(options =>
 builder.Services.AddScoped<IOrdersNamNhService, OrdersNamNhService>();
 builder.Services.AddScoped<Order_Detail_NamNHRepositories>();
 builder.Services.AddScoped<OrderDetailNamNhService>();
+builder.Services.AddScoped<IAccountService, SystemUserAccountService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

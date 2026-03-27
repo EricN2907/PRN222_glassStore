@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +18,13 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
 
         private readonly IOrdersNamNhService _service;
         private readonly OrderDetailNamNhService _details;
+        private readonly IHubContext<glassStore_Hub> _hubContext;
 
-        public DeleteModel(IOrdersNamNhService service, OrderDetailNamNhService detail)
+        public DeleteModel(IOrdersNamNhService service, OrderDetailNamNhService detail, IHubContext<glassStore_Hub> hubContext)
         {
             _service = service;
             _details = detail;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -60,6 +62,7 @@ namespace glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs
             }
             else
             {
+                await _hubContext.Clients.All.SendAsync("ReceiveDelete_OrdersNamNH", id.Value);
                 return RedirectToPage("./Index");
             }
         }

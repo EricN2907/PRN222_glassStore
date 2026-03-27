@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,13 +12,14 @@ namespace glassStore.Service.NamNH.Interface
         Task<List<OrdersNamNh>> GetAllAsync();
         // lưu ý ở id là theo cái data type của bảng mình cần
         Task<OrdersNamNh> GetByIdAsync(int id);
-        //Task<OrdersNamNh> SearchAsync(string order_code, string amount, string bankNo);
-        Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string product_name);
+        Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string receiver_name, int pageNumber = 1, int pageSize = 10);
+        Task<int> GetSearchCountAsync(string order_code, string phone_number, string receiver_name);
         //
         Task<int> CreateAsync(OrdersNamNh orders);
         //
         Task<int> UpdateAsync(OrdersNamNh orders);
         //
         Task<bool> DeleteAsync(int id);
+        Task<bool> ExistsAsync(int id);
     }
 }

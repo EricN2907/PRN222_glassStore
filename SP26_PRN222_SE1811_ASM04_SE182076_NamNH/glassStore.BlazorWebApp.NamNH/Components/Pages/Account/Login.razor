@@ -1,0 +1,117 @@
+@page "/login"
+@using glassStore.Service.NamNH.Interface
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IUserService UserService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<div class="auth-wrapper d-flex justify-content-center align-items-center" style="min-height: 85vh; background: radial-gradient(circle at top right, #f8fafc 0%, #e2e8f0 100%);">
+    <div class="card border-0 shadow-lg animate-in" style="width: 420px; border-radius: 20px;">
+        <div class="card-body p-5">
+            <div class="text-center mb-5">
+                <div class="mb-4 d-inline-block">
+                    <div class="bg-primary bg-opacity-10 p-4 rounded-circle">
+                        <i class="fas fa-glasses fa-3x text-primary"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-dark">Welcome Back</h3>
+                <p class="text-muted small">Sign in to manage your GlassStore dashboard</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger border-0 py-2 small mb-4 d-flex align-items-center" role="alert" style="background-color: #fee2e2; color: #991b1b;">
+                    <i class="fas fa-exclamation-circle me-2"></i> @errorMessage
+                </div>
+            }
+
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-muted mb-2 text-uppercase">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-envelope text-muted"></i></span>
+                        <InputText @bind-Value="loginModel.Email" class="form-control bg-light border-0" placeholder="name@example.com" />
+                    </div>
+                    <ValidationMessage For="@(() => loginModel.Email)" class="text-danger small mt-1" />
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label small fw-bold text-muted mb-2 text-uppercase">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-lock text-muted"></i></span>
+                        <InputText @bind-Value="loginModel.Password" type="password" class="form-control bg-light border-0" placeholder="••••••••" />
+                    </div>
+                    <ValidationMessage For="@(() => loginModel.Password)" class="text-danger small mt-1" />
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary py-3 fw-bold" disabled="@isProcessing">
+                        @if (isProcessing)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            <span>Authenticating...</span>
+                        }
+                        else
+                        {
+                            <span>Sign In</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginRequest loginModel { get; set; } = new();
+    private string? errorMessage;
+    private bool isProcessing = false;
+
+    private async Task HandleLogin()
+    {
+        isProcessing = true;
+        errorMessage = null;
+
+        try
+        {
+            var user = await UserService.LoginAsync(loginModel.Email, loginModel.Password);
+
+            if (user != null)
+            {
+                var userSession = new UserSession
+                {
+                    UserName = user.FullName ?? user.Email,
+                    Email = user.Email,
+                    Role = user.RoleId.ToString()
+                };
+
+                var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+                await customAuthStateProvider.UpdateAuthenticationState(userSession);
+                NavManager.NavigateTo("/ordersnamnhs");
+            }
+            else
+            {
+                errorMessage = "Invalid email or password.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while signing in. Please try again.";
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    public class LoginRequest
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; } = "";
+
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Password is required")]
+        public string Password { get; set; } = "";
+    }
+}

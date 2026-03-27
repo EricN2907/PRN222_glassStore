@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,40 +54,21 @@ namespace glassStore_Repositories.NamNH.Base
 
         public async Task<int> UpdateAsync(T entity)
         {
-            //// Turning off Tracking for UpdateAsync in Entity Framework
-            _context.ChangeTracker.Clear();
-            var tracker = _context.Attach(entity);
-            tracker.State = EntityState.Modified;
-            return await _context.SaveChangesAsync();
-
-            /*
             try
             {
-                // Get primary key dynamically
-                var keyValues = _context.Model.FindEntityType(typeof(T))
-                                ?.FindPrimaryKey()
-                                ?.Properties
-                                ?.Select(p => p.PropertyInfo.GetValue(entity))
-                                .ToArray();
-
-                if (keyValues == null || keyValues.Length == 0)
-                    throw new InvalidOperationException("No primary key defined for entity.");
-
-                // Fetch existing entity without tracking
-                var existingEntity = await _context.Set<T>().FindAsync(keyValues);
-
-                if (existingEntity == null) return 0;
-
-                _context.Entry(existingEntity).State = EntityState.Detached; // ✅ Prevent tracking conflicts
-                _context.Entry(entity).State = EntityState.Modified; // ✅ Mark for update
-
+                // Simple attempt: Clear and Update
+                _context.ChangeTracker.Clear();
+                _context.Set<T>().Update(entity);
                 return await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return 0;
-            }           
-             */
+                // Direct approach if tracking is extremely stubborn
+                _context.ChangeTracker.Clear();
+                var tracker = _context.Attach(entity);
+                tracker.State = EntityState.Modified;
+                return await _context.SaveChangesAsync();
+            }
         }
 
         public bool Remove(T entity)
@@ -138,6 +119,11 @@ namespace glassStore_Repositories.NamNH.Base
             return await _context.Set<T>().FindAsync(code);
         }
 
+        public void ClearTracker()
+        {
+            _context.ChangeTracker.Clear();
+        }
+
         #region Separating asigned entity and save operators        
 
         public void PrepareCreate(T entity)
@@ -147,8 +133,8 @@ namespace glassStore_Repositories.NamNH.Base
 
         public void PrepareUpdate(T entity)
         {
-            var tracker = _context.Attach(entity);
-            tracker.State = EntityState.Modified;
+            _context.ChangeTracker.Clear();
+            _context.Set<T>().Update(entity);
         }
 
         public void PrepareRemove(T entity)

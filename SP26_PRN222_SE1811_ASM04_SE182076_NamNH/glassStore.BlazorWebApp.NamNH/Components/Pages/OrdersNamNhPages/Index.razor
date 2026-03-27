@@ -1,61 +1,279 @@
-﻿@page "/ordersnamnhs"
+@page "/ordersnamnhs"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using glassStore.Entites.NamNH.Models
 @using glassStore.Service.NamNH.Interface
+@using Microsoft.JSInterop
 @implements IAsyncDisposable
-@inject IOrdersNamNhService _ordersNamNhService;
-@* @inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory *@
-<PageTitle>Index</PageTitle>
+@inject IOrdersNamNhService _ordersNamNhService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
-<h1>Index</h1>
+<PageTitle>Orders List - NamNH</PageTitle>
 
-<p>
-    <a href="ordersnamnhs/create">Create New</a>
-</p>
+<div class="row mb-4 animate-in">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Orders Management</h2>
+                <p class="text-muted small mb-0">Monitor and manage all customer orders in real-time.</p>
+            </div>
+            <a href="/ordersnamnhs/create" class="btn btn-primary shadow-sm px-4">
+                <i class="fas fa-plus me-2"></i> Create New Order
+            </a>
+        </div>
+    </div>
+</div>
 
-<QuickGrid Class="table" Items="ordersNamNhs">
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.UserId" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.VoucherId" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.OrderType" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.OrderCode" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.PaymentMethod" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.Subtotal" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.DiscountTotal" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.TaxTotal" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.ShippingFee" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.GrandTotal" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.Status" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.CustomerNote" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverName" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverPhone" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.ReceiverAddress" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.CreatedAt" />
-    <PropertyColumn Property="ordersnamnh => ordersnamnh.UpdatedAt" />
+@if (ordersList == null)
+{
+    <div class="d-flex justify-content-center align-items-center p-5">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Filters Card -->
+    <div class="card border-0 shadow-sm mb-4 animate-in" style="animation-delay: 0.1s">
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold text-muted mb-2">ORDER CODE</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-barcode text-muted"></i></span>
+                        <input type="text" class="form-control bg-light border-0" placeholder="ORD-..." @bind="SearchCode" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold text-muted mb-2">CUSTOMER NAME</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-user text-muted"></i></span>
+                        <input type="text" class="form-control bg-light border-0" placeholder="Name..." @bind="SearchReceiverName" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold text-muted mb-2">PHONE NUMBER</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-phone text-muted"></i></span>
+                        <input type="text" class="form-control bg-light border-0" placeholder="09xxx..." @bind="SearchPhone" @bind:event="oninput" @onkeyup="HandleKeyUp" />
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex align-items-end gap-2">
+                    <button class="btn btn-primary flex-grow-1" @onclick="LoadData">
+                        <i class="fas fa-search me-2"></i> Search
+                    </button>
+                    <button class="btn btn-light" @onclick="ClearFilters" title="Clear Filters">
+                        <i class="fas fa-sync-alt text-muted"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <TemplateColumn Context="ordersnamnh">
-        <a href="@($"ordersnamnhs/edit?orderid={ordersnamnh.OrderId}")">Edit</a> |
-        <a href="@($"ordersnamnhs/details?orderid={ordersnamnh.OrderId}")">Details</a> |
-        <a href="@($"ordersnamnhs/delete?orderid={ordersnamnh.OrderId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <!-- Data Card -->
+    <div class="card border-0 shadow-sm animate-in" style="animation-delay: 0.2s">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Order Code</th>
+                        <th>Customer Info</th>
+                        <th>Type & Payment</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Created At</th>
+                        <th class="text-center pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ordersList.Any())
+                    {
+                        @foreach (var item in ordersList)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="fw-bold text-dark">@item.OrderCode</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-2 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                            @(item.User?.FullName?.FirstOrDefault() ?? 'U')
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium small">@item.User?.FullName</div>
+                                            <div class="text-muted" style="font-size: 0.7rem;">@item.User?.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="small fw-medium">@item.OrderType</span>
+                                        <span class="text-muted" style="font-size: 0.7rem;">@(item.PaymentMethod == "Banking" ? "Chuyển khoản" : item.PaymentMethod)</span>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <span class="fw-bold text-primary">@item.GrandTotal?.ToString("N0") đ</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge @GetStatusClass(item.Status) bg-opacity-10 text-@GetStatusTextColor(item.Status)">@item.Status</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-muted small">@item.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</span>
+                                </td>
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="@($"/ordersnamnhs/details?orderid={item.OrderId}")" class="btn btn-sm btn-light text-info" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@($"/ordersnamnhs/edit?orderid={item.OrderId}")" class="btn btn-sm btn-light text-warning" title="Edit Order">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@($"/ordersnamnhs/delete?orderid={item.OrderId}")" class="btn btn-sm btn-light text-danger" title="Delete Order">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <i class="fas fa-inbox fa-3x text-light mb-3"></i>
+                                <p class="text-muted">No orders found matching your criteria.</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        @if (TotalPages > 1)
+        {
+            <div class="card-footer bg-transparent border-0 py-4">
+                <nav>
+                    <ul class="pagination pagination-sm justify-content-center mb-0 gap-2">
+                        <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                            <button class="page-link border-0 rounded-3" @onclick="() => GoToPage(CurrentPage - 1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </li>
+                        @for (int i = 1; i <= TotalPages; i++)
+                        {
+                            var pageNum = i;
+                            <li class="page-item @(CurrentPage == pageNum ? "active" : "")">
+                                <button class="page-link border-0 rounded-3 mx-1" @onclick="() => GoToPage(pageNum)">@pageNum</button>
+                            </li>
+                        }
+                        <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                            <button class="page-link border-0 rounded-3" @onclick="() => GoToPage(CurrentPage + 1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+}
+
 
 @code {
-    // private glass_StoreContext context = default!;
-    private IQueryable<OrdersNamNh> ordersNamNhs = default;
-
- 
+    private List<OrdersNamNh>? ordersList;
+    private int CurrentPage { get; set; } = 1;
+    private int PageSize { get; set; } = 10;
+    private int TotalItems { get; set; }
+    private int TotalPages => (int)Math.Ceiling((double)TotalItems / PageSize);
+    
+    private string SearchCode { get; set; } = string.Empty;
+    private string SearchReceiverName { get; set; } = string.Empty;
+    private string SearchPhone { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        // context = DbFactory.CreateDbContext();
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
         try
         {
-            ordersNamNhs = (await _ordersNamNhService.GetAllAsync()).AsQueryable();
-        }catch(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
+            await JSRuntime.InvokeVoidAsync("console.log", "Index: Loading data...");
+            ordersList = await _ordersNamNhService.SearchAsync(SearchCode, SearchPhone, SearchReceiverName, CurrentPage, PageSize);
+            TotalItems = await _ordersNamNhService.GetSearchCountAsync(SearchCode, SearchPhone, SearchReceiverName);
+            await JSRuntime.InvokeVoidAsync("console.log", "Index: Data loaded. Count: " + (ordersList?.Count ?? 0));
         }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Index: LoadData Error - " + ex.Message);
+            ordersList = new List<OrdersNamNh>(); // Initialize empty to stop spinner
+        }
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            CurrentPage = 1;
+            await LoadData();
+        }
+    }
+
+    private async Task GoToPage(int page)
+    {
+        CurrentPage = page;
+        await LoadData();
+    }
+
+    private async Task ClearFilters()
+    {
+        SearchCode = string.Empty;
+        SearchReceiverName = string.Empty;
+        SearchPhone = string.Empty;
+        CurrentPage = 1;
+        await LoadData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetHelper = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("initSignalRIndex", dotNetHelper);
+        }
+    }
+
+    [JSInvokable]
+    public async Task RefreshData()
+    {
+        await LoadData();
+        StateHasChanged();
+    }
+
+    private string GetStatusClass(string? status)
+    {
+        return status switch
+        {
+            "Paid" => "bg-success",
+            "Pending" => "bg-warning",
+            "Cancelled" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetStatusTextColor(string? status)
+    {
+        return status switch
+        {
+            "Paid" => "success",
+            "Pending" => "warning",
+            "Cancelled" => "danger",
+            _ => "secondary"
+        };
     }
 
     public ValueTask DisposeAsync()

@@ -1,133 +1,234 @@
-﻿@page "/ordersnamnhs/edit"
+@page "/ordersnamnhs/edit"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @using Microsoft.EntityFrameworkCore
 @using glassStore.Entites.NamNH.Models
-@inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory
+@using glassStore.Service.NamNH.Interface
+@using Microsoft.AspNetCore.SignalR
+@using glassStore.BlazorWebApp.NamNH.Hubs
 @inject NavigationManager NavigationManager
+@inject IOrdersNamNhService OrdersNamNhService
+@inject IUserService UserService
+@inject IHubContext<glassStore_Hub> HubContext
+@inject IJSRuntime JSRuntime
 
-<PageTitle>Edit</PageTitle>
+@rendermode InteractiveServer
 
-<h1>Edit</h1>
+<PageTitle>Edit Order - NamNH</PageTitle>
 
-<h2>OrdersNamNh</h2>
-<hr />
+<div class="row mb-4 animate-in">
+    <div class="col-12">
+        <h2 class="fw-bold text-dark mb-1">Edit Order #@OrderId</h2>
+        <p class="text-muted small mb-0">Modify the order details and logistics information as needed.</p>
+    </div>
+</div>
+
 @if (OrdersNamNh is null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center p-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="OrdersNamNh" OnValidSubmit="UpdateOrdersNamNh" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="OrdersNamNh.OrderId" value="@OrdersNamNh.OrderId" />
-                <div class="mb-3">
-                    <label for="userid" class="form-label">UserId:</label>
-                    <InputNumber id="userid" @bind-Value="OrdersNamNh.UserId" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.UserId" class="text-danger" />
+    <div class="row animate-in" style="animation-delay: 0.1s">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <EditForm Model="OrdersNamNh" OnValidSubmit="UpdateOrdersNamNh">
+                        <DataAnnotationsValidator />
+                        
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger shadow-sm border-0 animate-in mb-4 text-center">
+                                <i class="fas fa-exclamation-triangle me-2"></i> @errorMessage
+                            </div>
+                        }
+
+                        <div class="section-title mb-4">
+                            <h6 class="text-primary fw-bold text-uppercase small tracking-wider mb-0">General Information</h6>
+                            <hr class="mt-2 mb-4 opacity-10" />
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="userid" class="form-label small fw-semibold text-muted">CUSTOMER <span class="text-danger">*</span></label> 
+                                <select id="userid" @bind="OrdersNamNh.UserId" class="form-select bg-light border-0">
+                                    <option value="">-- Select Customer --</option>
+                                    @if (Users != null)
+                                    {
+                                        @foreach (var u in Users)
+                                        {
+                                            <option value="@u.UserId">@u.FullName (@u.Email)</option>
+                                        }
+                                    }
+                                </select>
+                                <ValidationMessage For="() => OrdersNamNh.UserId" class="text-danger small mt-1" /> 
+                            </div>        
+                            <div class="col-md-6">
+                                <label for="ordercode" class="form-label small fw-semibold text-muted">ORDER REFERENCE CODE <span class="text-danger">*</span></label> 
+                                <InputText id="ordercode" @bind-Value="OrdersNamNh.OrderCode" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.OrderCode" class="text-danger small mt-1" /> 
+                            </div>
+                        </div>
+
+                        <div class="section-title mb-4 mt-5">
+                            <h6 class="text-primary fw-bold text-uppercase small tracking-wider mb-0">Logistics & Status</h6>
+                            <hr class="mt-2 mb-4 opacity-10" />
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <label for="ordertype" class="form-label small fw-semibold text-muted">ORDER TYPE <span class="text-danger">*</span></label> 
+                                <select id="ordertype" @bind="OrdersNamNh.OrderType" class="form-select bg-light border-0">
+                                    <option value="Store">Tại cửa hàng (Store)</option>
+                                    <option value="Online">Trực tuyến (Online)</option>
+                                    <option value="Preorder">Đặt trước (Preorder)</option>
+                                    <option value="COD">Giao hàng (COD)</option>
+                                </select>
+                                <ValidationMessage For="() => OrdersNamNh.OrderType" class="text-danger small mt-1" /> 
+                            </div>        
+                            <div class="col-md-4">
+                                <label for="paymentmethod" class="form-label small fw-semibold text-muted">PAYMENT METHOD <span class="text-danger">*</span></label> 
+                                <select id="paymentmethod" @bind="OrdersNamNh.PaymentMethod" class="form-select bg-light border-0">
+                                    <option value="Tiền mặt">Tiền mặt</option>
+                                    <option value="Banking">Chuyển khoản</option>
+                                    <option value="VNPay">VNPay</option>
+                                    <option value="COD">COD</option>
+                                </select>
+                                <ValidationMessage For="() => OrdersNamNh.PaymentMethod" class="text-danger small mt-1" /> 
+                            </div>
+                            <div class="col-md-4">
+                                <label for="status" class="form-label small fw-semibold text-muted">ORDER STATUS <span class="text-danger">*</span></label> 
+                                <select id="status" @bind="OrdersNamNh.Status" class="form-select bg-light border-0">
+                                    <option value="Pending">Chờ xử lý</option>
+                                    <option value="Paid">Đã thanh toán</option>
+                                    <option value="Cancelled">Đã hủy</option>
+                                </select>
+                                <ValidationMessage For="() => OrdersNamNh.Status" class="text-danger small mt-1" /> 
+                            </div>
+                        </div>
+
+                        <div class="section-title mb-4 mt-5">
+                            <h6 class="text-primary fw-bold text-uppercase small tracking-wider mb-0">Financial Summary</h6>
+                            <hr class="mt-2 mb-4 opacity-10" />
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-muted">SUBTOTAL <span class="text-danger">*</span></label> 
+                                <InputNumber @bind-Value="OrdersNamNh.Subtotal" @bind-Value:after="CalculateTotal" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.Subtotal" class="text-danger small mt-1" />
+                            </div>        
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-muted">DISCOUNT</label> 
+                                <InputNumber @bind-Value="OrdersNamNh.DiscountTotal" @bind-Value:after="CalculateTotal" class="form-control bg-light border-0" /> 
+                            </div>        
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-muted">TAX (VAT)</label> 
+                                <InputNumber @bind-Value="OrdersNamNh.TaxTotal" @bind-Value:after="CalculateTotal" class="form-control bg-light border-0" /> 
+                            </div>        
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold text-muted">SHIPPING <span class="text-danger">*</span></label> 
+                                <InputNumber @bind-Value="OrdersNamNh.ShippingFee" @bind-Value:after="CalculateTotal" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.ShippingFee" class="text-danger small mt-1" />
+                            </div>
+                        </div>
+
+                        <div class="rounded-4 mt-4 mb-5 shadow-lg border-start border-primary border-5 overflow-hidden" style="background: #1e1e2e; color: white;">
+                            <div class="p-4 d-flex justify-content-between align-items-center flex-column flex-md-row">
+                                <div>
+                                    <h6 class="text-white-50 fw-bold text-uppercase mb-1 small tracking-wider">Grand Total Amount</h6>
+                                    <p class="text-white mb-0 small opacity-75">Final confirmed price including all fees</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="fs-2 fw-bold text-white d-block">@((OrdersNamNh.GrandTotal ?? 0).ToString("N0")) đ</span>
+                                </div>
+                            </div>
+                            <InputNumber @bind-Value="OrdersNamNh.GrandTotal" class="d-none" />
+                            <ValidationMessage For="() => OrdersNamNh.GrandTotal" class="text-danger small mt-1" />
+                        </div>
+
+                        <div class="section-title mb-4">
+                            <h6 class="text-primary fw-bold text-uppercase small tracking-wider mb-0">Shipping Recipient</h6>
+                            <hr class="mt-2 mb-4 opacity-10" />
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-muted">RECEIVER NAME <span class="text-danger">*</span></label> 
+                                <InputText @bind-Value="OrdersNamNh.ReceiverName" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.ReceiverName" class="text-danger small mt-1" />
+                            </div>        
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-muted">PHONE NUMBER <span class="text-danger">*</span></label> 
+                                <InputText @bind-Value="OrdersNamNh.ReceiverPhone" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.ReceiverPhone" class="text-danger small mt-1" />
+                            </div>        
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-muted">SHIPPING ADDRESS <span class="text-danger">*</span></label> 
+                                <InputText @bind-Value="OrdersNamNh.ReceiverAddress" class="form-control bg-light border-0" /> 
+                                <ValidationMessage For="() => OrdersNamNh.ReceiverAddress" class="text-danger small mt-1" />
+                            </div>
+                        </div>
+
+                        <div class="mb-5 mt-4">
+                            <label class="form-label small fw-semibold text-muted">ORDER NOTES</label> 
+                            <InputTextArea @bind-Value="OrdersNamNh.CustomerNote" class="form-control bg-light border-0" rows="3" /> 
+                        </div>        
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm" disabled="@isSaving">
+                                @if (isSaving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span>Saving...</span>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-save me-2"></i>
+                                    <span>Save Changes</span>
+                                }
+                            </button>
+                            <a href="/ordersnamnhs" class="btn btn-light px-4 py-2 text-muted">
+                                Cancel
+                            </a>
+                        </div>
+                    </EditForm>
                 </div>
-                <div class="mb-3">
-                    <label for="voucherid" class="form-label">VoucherId:</label>
-                    <InputNumber id="voucherid" @bind-Value="OrdersNamNh.VoucherId" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.VoucherId" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="ordertype" class="form-label">OrderType:</label>
-                    <InputText id="ordertype" @bind-Value="OrdersNamNh.OrderType" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.OrderType" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="ordercode" class="form-label">OrderCode:</label>
-                    <InputText id="ordercode" @bind-Value="OrdersNamNh.OrderCode" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.OrderCode" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="paymentmethod" class="form-label">PaymentMethod:</label>
-                    <InputText id="paymentmethod" @bind-Value="OrdersNamNh.PaymentMethod" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.PaymentMethod" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="subtotal" class="form-label">Subtotal:</label>
-                    <InputNumber id="subtotal" @bind-Value="OrdersNamNh.Subtotal" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.Subtotal" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="discounttotal" class="form-label">DiscountTotal:</label>
-                    <InputNumber id="discounttotal" @bind-Value="OrdersNamNh.DiscountTotal" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.DiscountTotal" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="taxtotal" class="form-label">TaxTotal:</label>
-                    <InputNumber id="taxtotal" @bind-Value="OrdersNamNh.TaxTotal" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.TaxTotal" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="shippingfee" class="form-label">ShippingFee:</label>
-                    <InputNumber id="shippingfee" @bind-Value="OrdersNamNh.ShippingFee" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.ShippingFee" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="grandtotal" class="form-label">GrandTotal:</label>
-                    <InputNumber id="grandtotal" @bind-Value="OrdersNamNh.GrandTotal" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.GrandTotal" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <InputText id="status" @bind-Value="OrdersNamNh.Status" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.Status" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="customernote" class="form-label">CustomerNote:</label>
-                    <InputText id="customernote" @bind-Value="OrdersNamNh.CustomerNote" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.CustomerNote" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="receivername" class="form-label">ReceiverName:</label>
-                    <InputText id="receivername" @bind-Value="OrdersNamNh.ReceiverName" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.ReceiverName" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="receiverphone" class="form-label">ReceiverPhone:</label>
-                    <InputText id="receiverphone" @bind-Value="OrdersNamNh.ReceiverPhone" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.ReceiverPhone" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="receiveraddress" class="form-label">ReceiverAddress:</label>
-                    <InputText id="receiveraddress" @bind-Value="OrdersNamNh.ReceiverAddress" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.ReceiverAddress" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="createdat" class="form-label">CreatedAt:</label>
-                    <InputDate id="createdat" @bind-Value="OrdersNamNh.CreatedAt" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.CreatedAt" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="updatedat" class="form-label">UpdatedAt:</label>
-                    <InputDate id="updatedat" @bind-Value="OrdersNamNh.UpdatedAt" class="form-control" />
-                    <ValidationMessage For="() => OrdersNamNh.UpdatedAt" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
+            </div>
         </div>
     </div>
 }
-
-<div>
-    <a href="/ordersnamnhs">Back to List</a>
-</div>
-
 @code {
     [SupplyParameterFromQuery]
     private int OrderId { get; set; }
 
-    [SupplyParameterFromForm]
     private OrdersNamNh? OrdersNamNh { get; set; }
+
+    private List<User> Users { get; set; }
+    private string? errorMessage;
+    private bool isSaving = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && OrderId != 0)
+        {
+            var dotNetHelper = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("initSignalR", OrderId, dotNetHelper);
+        }
+    }
+
+    [JSInvokable]
+    public async Task RefreshData()
+    {
+        OrdersNamNh = await OrdersNamNhService.GetByIdAsync(OrderId);
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        OrdersNamNh ??= await context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == OrderId);
+        Users = await UserService.GetAllAsync();
+        OrdersNamNh ??= await OrdersNamNhService.GetByIdAsync(OrderId);
 
         if (OrdersNamNh is null)
         {
@@ -135,35 +236,122 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private void CalculateTotal()
+    {
+        if (OrdersNamNh != null)
+        {
+            OrdersNamNh.GrandTotal = (OrdersNamNh.Subtotal ?? 0) 
+                                    - (OrdersNamNh.DiscountTotal ?? 0) 
+                                    + (OrdersNamNh.TaxTotal ?? 0) 
+                                    + (OrdersNamNh.ShippingFee ?? 0);
+            
+            if (OrdersNamNh.GrandTotal < 0) OrdersNamNh.GrandTotal = 0;
+            StateHasChanged();
+        }
+    }
+
+    private bool ValidateForm()
+    {
+        if (OrdersNamNh == null) return false;
+        
+        if (OrdersNamNh.UserId == null || OrdersNamNh.UserId == 0)
+        {
+            errorMessage = "Vui lòng chọn khách hàng (Customer).";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.OrderCode))
+        {
+            errorMessage = "Vui lòng nhập mã đơn hàng (Order Code).";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.OrderType))
+        {
+            errorMessage = "Vui lòng chọn loại đơn hàng (Order Type).";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.PaymentMethod))
+        {
+            errorMessage = "Vui lòng chọn phương thức thanh toán.";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.Status))
+        {
+            errorMessage = "Vui lòng chọn trạng thái đơn hàng.";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.ReceiverName))
+        {
+            errorMessage = "Vui lòng nhập tên người nhận.";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.ReceiverPhone))
+        {
+            errorMessage = "Vui lòng nhập số điện thoại người nhận.";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(OrdersNamNh.ReceiverAddress))
+        {
+            errorMessage = "Vui lòng nhập địa chỉ nhận hàng.";
+            return false;
+        }
+        if (OrdersNamNh.Subtotal == null || OrdersNamNh.Subtotal <= 0)
+        {
+            errorMessage = "Số tiền (Subtotal) phải lớn hơn 0.";
+            return false;
+        }
+        if (OrdersNamNh.GrandTotal == null || OrdersNamNh.GrandTotal <= 0)
+        {
+            errorMessage = "Tổng tiền (Grand Total) phải lớn hơn 0.";
+            return false;
+        }
+        return true;
+    }
+
+
     private async Task UpdateOrdersNamNh()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(OrdersNamNh!).State = EntityState.Modified;
-
-        try
+        if (OrdersNamNh == null) return;
+        
+        errorMessage = null;
+        CalculateTotal(); // Force re-calc
+        
+        if (!ValidateForm()) 
         {
-            await context.SaveChangesAsync();
+            await JSRuntime.InvokeVoidAsync("console.error", "Validation failed: " + errorMessage);
+            return;
         }
-        catch (DbUpdateConcurrencyException)
+
+        isSaving = true;
+        try 
         {
-            if (!OrdersNamNhExists(OrdersNamNh!.OrderId))
+            await JSRuntime.InvokeVoidAsync("console.log", "Attempting update for Order #" + OrderId);
+            OrdersNamNh!.UpdatedAt = DateTime.Now;
+            
+            // Clear navigation property to ensure EF uses UserId FK
+            OrdersNamNh.User = null;
+            
+            var result = await OrdersNamNhService.UpdateAsync(OrdersNamNh!);
+            
+            if (result > 0)
             {
-                NavigationManager.NavigateTo("notfound");
+                await JSRuntime.InvokeVoidAsync("console.log", "Update successful. Notifying SignalR...");
+                await JSRuntime.InvokeVoidAsync("alert", "Cập nhật đơn hàng thành công!");
+                
+                // Notify SignalR with just the ID for reliability
+                await HubContext.Clients.All.SendAsync("ReceiveUpdate_OrdersNamNH", OrdersNamNh.OrderId);
+                NavigationManager.NavigateTo("/ordersnamnhs");
             }
             else
             {
-                throw;
+                errorMessage = "Không có thay đổi nào được lưu hoặc lỗi DB.";
+                isSaving = false;
             }
         }
-
-        NavigationManager.NavigateTo("/ordersnamnhs");
-    }
-
-    private bool OrdersNamNhExists(int orderid)
-    {
-        using var context = DbFactory.CreateDbContext();
-        return context.OrdersNamNhs.Any(e => e.OrderId == orderid);
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Update Error: " + ex.Message);
+            errorMessage = "Lỗi hệ thống khi lưu: " + ex.Message;
+            isSaving = false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,35 +16,54 @@ namespace glassStore.Repositories.NamNH
         public OrdersNamNhRepositories(){ }
 
         public OrdersNamNhRepositories(glass_StoreContext context) => _context = context;
+        
+        public glass_StoreContext GetContext() => _context;
       
         public async Task<List<OrdersNamNh>> GetAllAsync()
         {
             var items = await _context.OrdersNamNhs
                               .Include(o => o.OrderDetailNamNhs)
+                              .Include(o => o.User)
                 .ToListAsync();
             return items ?? new List<OrdersNamNh>();
         }
 
-        public async Task<OrdersNamNh> GetById(int order_id)
+        public async Task<OrdersNamNh> GetByIdAsync(int? order_id)
         {
             var item = await _context.OrdersNamNhs
                 .Include(o => o.OrderDetailNamNhs)
+                .Include(o => o.User)
                 .FirstOrDefaultAsync(c => c.OrderId == order_id);
 
-            return item ?? new OrdersNamNh();
+            return item;
         }
 
-        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string product_name)
+        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string receiver_name, int pageNumber = 1, int pageSize = 10)
+        {
+            var query = _context.OrdersNamNhs
+                    .Include(o => o.OrderDetailNamNhs) 
+                    .Include(o => o.User)
+                    .Where(c =>
+                        (string.IsNullOrEmpty(order_code) || (c.OrderCode != null && c.OrderCode.Contains(order_code))) &&
+                        (string.IsNullOrEmpty(phone_number) || (c.ReceiverPhone != null && c.ReceiverPhone.Contains(phone_number))) &&
+                        (string.IsNullOrEmpty(receiver_name) || (c.ReceiverName != null && c.ReceiverName.Contains(receiver_name)))
+                    );
+
+            return await query
+                    .OrderByDescending(c => c.CreatedAt) 
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+        }
+
+        public async Task<int> GetSearchCountAsync(string order_code, string phone_number, string receiver_name)
         {
             return await _context.OrdersNamNhs
-                    .Include(o => o.OrderDetailNamNhs) 
-                    .Where(c =>
-                        (string.IsNullOrEmpty(order_code) || c.OrderCode.Contains(order_code)) &&
-                        (string.IsNullOrEmpty(phone_number) || c.ReceiverPhone.Contains(phone_number)) &&
-                        (string.IsNullOrEmpty(product_name) || c.OrderDetailNamNhs.Any(d => d.ProductNameSnapshot.Contains(product_name)))
-                    )
-                    .OrderByDescending(c => c.CreatedAt) 
-                    .ToListAsync();
+                    .CountAsync(c =>
+                        (string.IsNullOrEmpty(order_code) || (c.OrderCode != null && c.OrderCode.Contains(order_code))) &&
+                        (string.IsNullOrEmpty(phone_number) || (c.ReceiverPhone != null && c.ReceiverPhone.Contains(phone_number))) &&
+                        (string.IsNullOrEmpty(receiver_name) || (c.ReceiverName != null && c.ReceiverName.Contains(receiver_name)))
+                    );
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using glassStore.Entites.NamNH.Models;
+using glassStore.Entites.NamNH.Models;
 using glassStore.Service.NamNH;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,6 +26,9 @@ namespace glassStore.RazorWebApp.Pages.Account
 
         [BindProperty]
         public string Password { get; set; } = string.Empty;
+
+        [BindProperty(SupportsGet = true)]
+        public string? ReturnUrl { get; set; }
 
 
         public void OnGet()
@@ -55,6 +58,11 @@ namespace glassStore.RazorWebApp.Pages.Account
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
             var cookieValue = userAccount.UserName ?? "";
             Response.Cookies.Append("UserName", cookieValue);
+
+            if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+            {
+                return Redirect(ReturnUrl);
+            }
 
             return RedirectToPage("/OrdersNamNhs/Index");
         }

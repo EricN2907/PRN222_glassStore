@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +12,10 @@ namespace glassStore.Service.NamNH
     {
         private readonly Order_Detail_NamNHRepositories _repo;
 
-        public OrderDetailNamNhService() => _repo ??= new Order_Detail_NamNHRepositories();
+        public OrderDetailNamNhService(Order_Detail_NamNHRepositories repo)
+        {
+            _repo = repo;
+        }
 
         public async Task<List<OrderDetailNamNh>> GetAllAsync()
         {

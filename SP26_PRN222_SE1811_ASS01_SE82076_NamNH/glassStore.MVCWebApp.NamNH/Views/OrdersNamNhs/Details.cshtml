@@ -1,4 +1,4 @@
-﻿@model glassStore.Entites.NamNH.Models.OrdersNamNh
+@model glassStore.Entites.NamNH.Models.OrdersNamNh
 
 @{
     ViewData["Title"] = "Chi Tiết Đơn Hàng";
@@ -187,6 +187,45 @@
                     </div>
                 </div>
 
+                <div class="mt-5">
+                    <div class="section-title"><i class="fas fa-boxes me-2"></i>Danh Sách Sản Phẩm</div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Đơn giá</th>
+                                    <th class="text-end">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.OrderDetailNamNhs != null && Model.OrderDetailNamNhs.Any())
+                                {
+                                    @foreach (var detail in Model.OrderDetailNamNhs)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="fw-bold">@detail.ProductNameSnapshot</div>
+                                                <small class="text-muted">@detail.VariantDescSnapshot</small>
+                                            </td>
+                                            <td class="text-center">@detail.Quantity</td>
+                                            <td class="text-end">@detail.UnitPriceAtPurchase?.ToString("N0") ₫</td>
+                                            <td class="text-end fw-bold">@detail.LineTotal?.ToString("N0") ₫</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">Không có dữ liệu sản phẩm.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="mt-5 total-section">
                     <div class="section-title border-0 pb-0 mb-3"><i class="fas fa-receipt me-2"></i>Chi Tiết Thanh Toán</div>
                     <div class="row">
@@ -219,7 +258,7 @@
     </div>
 </div>
 
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
 <script>
     "use strict";
 
@@ -231,15 +270,30 @@
         return console.error(err.toString());
     });
 
+    // Ép kiểu về số để so sánh chính xác
+    var currentOrderId = parseInt("@Model?.OrderId");
+
     connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
-        //alert($(`#${CashDepositSlipId}`).value);
+        if (currentOrderId === parseInt(orderId)) {
+            alert("Đơn hàng này đã bị xóa bởi một người dùng khác.");
+            window.location.href = '@Url.Action("Index", "OrdersNamNhs")';
+        }
+    });
 
-        var OrderHidden = document.getElementById("Order_id").value;
+    connection.on("ReceiveUpdate_OrdersNamNH", function (updatedOrder) {
+        // Hỗ trợ cả camelCase và PascalCase cho linh hoạt
+        var orderIdFromUpdate = updatedOrder.orderId || updatedOrder.OrderId || updatedOrder.order_id;
+        
+        if (currentOrderId === parseInt(orderIdFromUpdate)) {
+            var notification = document.createElement("div");
+            notification.className = "alert alert-info position-fixed top-0 end-0 m-3 shadow";
+            notification.style.zIndex = "9999";
+            notification.innerHTML = `<i class="fas fa-sync me-2"></i> Đơn hàng vừa được cập nhật. Đang tải lại...`;
+            document.body.appendChild(notification);
 
-        if (OrderHidden == orderId) {
-            document.getElementById("Order_id").innerHTML = "This item had deleted";
-        } else {
-            alert(CashDepositSlipId + " not found");
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
         }
     });
 

@@ -1,8 +1,23 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Trang chủ - Glass Store";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg p-5 border-0 rounded-4 bg-light">
+                <i class="fas fa-glasses fa-5x text-info mb-4"></i>
+                <h1 class="display-4 fw-bold text-dark">Hệ Thống Quản Lý Glass Store</h1>
+                <p class="lead text-muted mb-5">Chào mừng bạn đến với hệ thống quản lý đơn hàng chuyên nghiệp.</p>
+                
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a asp-controller="OrdersNamNhs" asp-action="Index" class="btn btn-info btn-lg px-5 py-3 text-white fw-bold shadow-sm rounded-pill">
+                        <i class="fas fa-list-alt me-2"></i> Xem Danh Sách Đơn Hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />

@@ -1,4 +1,4 @@
-﻿using glassStore.Entites.NamNH.Models;
+using glassStore.Entites.NamNH.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +11,6 @@ namespace glassStore.Service.NamNH.Interface
     {
         Task<SystemUserAccount> GetUserAsync(string user_name, string password);
         Task<SystemUserAccount?> LoginAsync(string email, string password);
+        Task<List<SystemUserAccount>> GetAllAsync();
     }
 }

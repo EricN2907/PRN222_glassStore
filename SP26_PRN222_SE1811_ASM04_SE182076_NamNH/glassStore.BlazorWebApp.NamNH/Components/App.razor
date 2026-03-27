@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,14 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="glassStore.BlazorWebApp.NamNH.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 </head>
-
+ 
 <body>
-    <Routes />
+    <CascadingAuthenticationState>
+        <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+    </CascadingAuthenticationState>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script>
+        console.log("SignalR Scripts Loading...");
+        
+        let signalrConnection = null;
+        let currentOrderId = null;
+        let signalrDotNetHelper = null;
+
+        async function ensureSignalRConnected() {
+            if (signalrConnection && signalrConnection.state === signalR.HubConnectionState.Connected) {
+                return signalrConnection;
+            }
+
+            if (!signalrConnection) {
+                signalrConnection = new signalR.HubConnectionBuilder()
+                    .withUrl("/glassStore_Hub")
+                    .withAutomaticReconnect()
+                    .build();
+
+                signalrConnection.on("ReceiveCreate_OrdersNamNH", function (payload) {
+                    console.log("SignalR (Global): New Order Created", payload);
+                    const code = (typeof payload === 'object') ? (payload?.orderCode || "Mới") : ("#" + payload);
+                    alert("Hệ thống: Vừa có đơn hàng mới (" + code + ")");
+                    if (signalrDotNetHelper) signalrDotNetHelper.invokeMethodAsync('RefreshData').catch(e => {}); 
+                });
+
+                signalrConnection.on("ReceiveUpdate_OrdersNamNH", function (payload) {
+                    console.log("SignalR (Global): Order Updated", payload);
+                    const id = (typeof payload === 'object') ? (payload.orderId || payload.OrderId || payload.order_id) : payload;
+                    if (parseInt(currentOrderId) === parseInt(id)) {
+                        alert("Thông báo: Đơn hàng bạn đang xem vừa được cập nhật!");
+                    }
+                    if (signalrDotNetHelper) signalrDotNetHelper.invokeMethodAsync('RefreshData').catch(e => {}); 
+                });
+
+                signalrConnection.on("ReceiveDelete_OrdersNamNH", function (deletedId) {
+                    console.log("SignalR (Global): Order Deleted ID:", deletedId);
+                    if (parseInt(currentOrderId) === parseInt(deletedId)) {
+                        alert("Cảnh báo: Đơn hàng bạn đang xem đã bị xóa bởi người khác!");
+                        window.location.href = "/ordersnamnhs";
+                    } else {
+                        // alert("Hệ thống: Đơn hàng #" + deletedId + " đã bị xóa!");
+                    }
+                    if (signalrDotNetHelper) signalrDotNetHelper.invokeMethodAsync('RefreshData').catch(e => {}); 
+                });
+            }
+
+            if (signalrConnection.state === signalR.HubConnectionState.Disconnected) {
+                await signalrConnection.start().catch(err => console.error("SignalR Global Sync Error: ", err));
+            }
+            return signalrConnection;
+        }
+
+        window.initSignalRIndex = async function (dotNetHelper) {
+            console.log("SignalR: Initializing Index Page Sync...");
+            signalrDotNetHelper = dotNetHelper;
+            currentOrderId = null;
+            await ensureSignalRConnected();
+        };
+
+        window.initSignalR = async function (orderId, dotNetHelper) {
+            console.log("SignalR: Initializing Detail/Edit Page Sync for ID: " + orderId);
+            signalrDotNetHelper = dotNetHelper;
+            currentOrderId = orderId;
+            await ensureSignalRConnected();
+        };
+    </script>
     <script src="_framework/blazor.web.js"></script>
 </body>
 

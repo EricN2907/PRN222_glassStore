@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +45,11 @@ namespace glassStore.Service.NamNH
             }
            
             return user;
+        }
+
+        public async Task<List<SystemUserAccount>> GetAllAsync()
+        {
+            return await _systemUserAccountRepositories.GetAllAsync();
         }
     }
 }

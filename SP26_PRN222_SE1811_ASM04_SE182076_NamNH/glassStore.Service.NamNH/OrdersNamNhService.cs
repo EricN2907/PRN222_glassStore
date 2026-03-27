@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using glassStore.Entites.NamNH.Models;
 using glassStore.Repositories.NamNH;
 using glassStore.Service.NamNH.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace glassStore.Service.NamNH
 {
@@ -13,7 +14,10 @@ namespace glassStore.Service.NamNH
     {
         private readonly OrdersNamNhRepositories _repo;
 
-        public OrdersNamNhService() => _repo ??= new OrdersNamNhRepositories();
+        public OrdersNamNhService(OrdersNamNhRepositories repo)
+        {
+            _repo = repo;
+        }
 
         public async Task<int> CreateAsync(OrdersNamNh orders)
         {
@@ -52,12 +56,24 @@ namespace glassStore.Service.NamNH
             }
         }
 
-        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string product_name)
+        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string receiver_name, int pageNumber = 1, int pageSize = 10)
         {
             //throw new NotImplementedException();
             try
             {
-                return await _repo.SearchAsync(order_code, phone_number, product_name);
+                return await _repo.SearchAsync(order_code, phone_number, receiver_name, pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<int> GetSearchCountAsync(string order_code, string phone_number, string receiver_name)
+        {
+            try
+            {
+                return await _repo.GetSearchCountAsync(order_code, phone_number, receiver_name);
             }
             catch (Exception ex)
             {
@@ -69,11 +85,14 @@ namespace glassStore.Service.NamNH
         {
             try
             {
-                var item = await _repo.GetByIdAsync(id);
-                if (item != null) {
-                    return await _repo.RemoveAsync(item);
-                }
-                return false;
+                if (id == null) return false;
+                
+                // Use ExecuteDeleteAsync to bypass tracking issues entirely (available in EF Core 7+)
+                var rowsAffected = await _repo.GetContext().OrdersNamNhs
+                    .Where(o => o.OrderId == id)
+                    .ExecuteDeleteAsync();
+                
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
@@ -91,6 +110,12 @@ namespace glassStore.Service.NamNH
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<bool> ExistsAsync(int? id)
+        {
+            var item = await _repo.GetByIdAsync(id);
+            return item != null;
         }
     }
 }

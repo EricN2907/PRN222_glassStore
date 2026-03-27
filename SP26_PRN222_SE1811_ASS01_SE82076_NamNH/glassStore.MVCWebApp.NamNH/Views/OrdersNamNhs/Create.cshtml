@@ -1,4 +1,4 @@
-﻿@model glassStore.Entites.NamNH.Models.OrdersNamNh
+@model glassStore.Entites.NamNH.Models.OrdersNamNh
 
 @{
     ViewData["Title"] = "Tạo Đơn Hàng Mới";
@@ -36,36 +36,41 @@
                         </div>
                         <div class="col-md-4">
                             <label asp-for="OrderType" class="form-label">Loại Đơn</label>
-                            <select asp-for="OrderType" class="form-control">
-                                <option value="Online">Online</option>
-                                <option value="Instore">Tại cửa hàng</option>
-                                <option value="Preorder">Đặt trước</option>
-                            </select>
+                             <select asp-for="OrderType" class="form-control">
+                                 <option value="">-- Chọn loại đơn --</option>
+                                 <option value="Online">Online</option>
+                                 <option value="Instore">Tại cửa hàng</option>
+                                 <option value="Preorder">Đặt trước</option>
+                             </select>
                             <span asp-validation-for="OrderType" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
                             <label asp-for="Status" class="form-label">Trạng Thái</label>
-                            <select asp-for="Status" class="form-control">
-                                <option value="Pending">Pending (Chờ xử lý)</option>
-                                <option value="Processing">Processing (Đang xử lý)</option>
-                                <option value="Completed">Completed (Hoàn thành)</option>
-                                <option value="Cancelled">Cancelled (Đã hủy)</option>
-                            </select>
+                             <select asp-for="Status" class="form-control">
+                                 <option value="">-- Chọn trạng thái --</option>
+                                 <option value="Pending">Pending (Chờ xử lý)</option>
+                                 <option value="Processing">Processing (Đang xử lý)</option>
+                                 <option value="Completed">Completed (Hoàn thành)</option>
+                                 <option value="Cancelled">Cancelled (Đã hủy)</option>
+                             </select>
                             <span asp-validation-for="Status" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="PaymentMethod" class="form-label">Phương Thức Thanh Toán</label>
-                            <select asp-for="PaymentMethod" class="form-control">
-                                <option value="COD">COD (Tiền mặt)</option>
-                                <option value="Banking">Chuyển khoản</option>
-                                <option value="Momo">Ví Momo</option>
-                                <option value="VNPay">VNPay</option>
-                            </select>
+                             <select asp-for="PaymentMethod" class="form-control">
+                                 <option value="">-- Chọn phương thức --</option>
+                                 <option value="COD">COD (Tiền mặt)</option>
+                                 <option value="Banking">Chuyển khoản</option>
+                                 <option value="Momo">Ví Momo</option>
+                                 <option value="VNPay">VNPay</option>
+                             </select>
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Email Khách Hàng (User ID)</label>
-                            <input asp-for="UserId" class="form-control" placeholder="Nhập ID khách hàng..." />
+                            <label asp-for="UserId" class="form-label">Khách Hàng (Tài khoản)</label>
+                            <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                                <option value="">-- Chọn khách hàng --</option>
+                            </select>
                             <span asp-validation-for="UserId" class="text-danger"></span>
                         </div>
                     </div>
@@ -118,7 +123,7 @@
                         </div>
                         <div class="col-md-12">
                             <label asp-for="GrandTotal" class="form-label text-success fw-bold">Tổng Cộng (Grand Total)</label>
-                            <input asp-for="GrandTotal" class="form-control fw-bold border-success text-success" type="number" style="font-size: 1.2rem;" />
+                            <input asp-for="GrandTotal" class="form-control fw-bold border-success text-success" type="number" style="font-size: 1.2rem;" readonly />
                             <span asp-validation-for="GrandTotal" class="text-danger"></span>
                         </div>
                     </div>
@@ -138,4 +143,20 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            function calculateTotal() {
+                var subtotal = parseFloat($('#Subtotal').val()) || 0;
+                var discount = parseFloat($('#DiscountTotal').val()) || 0;
+                var tax = parseFloat($('#TaxTotal').val()) || 0;
+                var shipping = parseFloat($('#ShippingFee').val()) || 0;
+                var grandTotal = subtotal - discount + tax + shipping;
+                $('#GrandTotal').val(grandTotal);
+            }
+
+            $('#Subtotal, #DiscountTotal, #TaxTotal, #ShippingFee').on('input', function () {
+                calculateTotal();
+            });
+        });
+    </script>
 }

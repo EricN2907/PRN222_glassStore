@@ -1,97 +1,77 @@
-﻿@page "/ordersnamnhs/delete"
+@page "/ordersnamnhs/delete"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using glassStore.Entites.NamNH.Models
+@using Microsoft.AspNetCore.SignalR
+@using glassStore.BlazorWebApp.NamNH.Hubs
 @inject NavigationManager NavigationManager
 @using glassStore.Service.NamNH.Interface
 @inject IOrdersNamNhService OrdersService
+@inject IHubContext<glassStore_Hub> HubContext
 
-<PageTitle>Delete</PageTitle>
+<PageTitle>Delete Order - NamNH</PageTitle>
 
-<h1>Delete</h1>
-
-<p>Are you sure you want to delete this?</p>
-<div>
-    <h2>OrdersNamNh</h2>
-    <hr />
-    @if (ordersnamnh is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@ordersnamnh.UserId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">VoucherId</dt>
-            <dd class="col-sm-10">@ordersnamnh.VoucherId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">OrderType</dt>
-            <dd class="col-sm-10">@ordersnamnh.OrderType</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">OrderCode</dt>
-            <dd class="col-sm-10">@ordersnamnh.OrderCode</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">PaymentMethod</dt>
-            <dd class="col-sm-10">@ordersnamnh.PaymentMethod</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Subtotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.Subtotal</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DiscountTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.DiscountTotal</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">TaxTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.TaxTotal</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ShippingFee</dt>
-            <dd class="col-sm-10">@ordersnamnh.ShippingFee</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">GrandTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.GrandTotal</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10">@ordersnamnh.Status</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CustomerNote</dt>
-            <dd class="col-sm-10">@ordersnamnh.CustomerNote</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ReceiverName</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverName</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ReceiverPhone</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverPhone</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">ReceiverAddress</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverAddress</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedAt</dt>
-            <dd class="col-sm-10">@ordersnamnh.CreatedAt</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedAt</dt>
-            <dd class="col-sm-10">@ordersnamnh.UpdatedAt</dd>
-        </dl>
-        <EditForm method="post" Model="ordersnamnh" OnValidSubmit="DeleteOrdersNamNh" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(ordersnamnh is null)">Delete</button> |
-            <a href="/ordersnamnhs">Back to List</a>
-        </EditForm>
-    }
+<div class="row mb-4 animate-in">
+    <div class="col-12 text-center text-md-start">
+        <h2 class="fw-bold text-danger mb-1">Permanently Delete Order</h2>
+        <p class="text-muted small mb-0">Confirming the removal of Order #@ordersnamnh?.OrderCode from the system.</p>
+    </div>
 </div>
+
+@if (ordersnamnh == null)
+{
+    <div class="d-flex justify-content-center p-5">
+        <div class="spinner-border text-danger" role="status"></div>
+    </div>
+}
+else
+{
+    <div class="row justify-content-center animate-in" style="animation-delay: 0.1s">
+        <div class="col-md-10 col-lg-8">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="row g-0">
+                    <div class="col-md-5 bg-danger bg-opacity-10 d-flex flex-column align-items-center justify-content-center p-5 text-center">
+                        <div class="bg-white p-4 rounded-circle shadow-sm mb-3">
+                            <i class="fas fa-trash-alt fa-3x text-danger"></i>
+                        </div>
+                        <h4 class="fw-bold text-danger">Wait!</h4>
+                        <p class="text-muted small mb-0">This action will delete all related records and cannot be reversed.</p>
+                    </div>
+                    <div class="col-md-7 p-5">
+                        <h5 class="fw-bold text-dark mb-4">Order Summary</h5>
+                        
+                        <div class="mb-4 pb-4 border-bottom">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small text-uppercase fw-semibold">Customer</span>
+                                <span class="fw-bold text-dark">@ordersnamnh.User?.FullName</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small text-uppercase fw-semibold">Code</span>
+                                <span class="fw-medium">#@ordersnamnh.OrderCode</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small text-uppercase fw-semibold">Amount</span>
+                                <span class="fw-bold text-danger fs-5">₫@ordersnamnh.GrandTotal?.ToString("N0")</span>
+                            </div>
+                        </div>
+
+                        <EditForm Model="ordersnamnh" OnValidSubmit="DeleteOrdersNamNh">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger py-3 fw-bold shadow-sm">
+                                    <i class="fas fa-trash-alt me-2"></i> Confirm and Delete
+                                </button>
+                                <a href="/ordersnamnhs" class="btn btn-light py-2 text-muted fw-bold">
+                                    No, Keep This Order
+                                </a>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     private OrdersNamNh? ordersnamnh;
@@ -112,6 +92,10 @@
     private async Task DeleteOrdersNamNh()
     {
         await OrdersService.DeleteAsync(OrderId);
+        
+        // Notify SignalR
+        await HubContext.Clients.All.SendAsync("ReceiveDelete_OrdersNamNH", OrderId);
+
         NavigationManager.NavigateTo("/ordersnamnhs");
     }
-}
+}

@@ -1,18 +1,20 @@
-﻿@page
+@page
 @model glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs.EditModel
 
 @{
-    ViewData["Title"] = "Update Order";
+    ViewData["Title"] = "Cập nhật đơn hàng";
 }
 
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded">
         <div>
-            <h1 class="h3 mb-0 text-gray-800">Edit Order</h1>
-            <p class="text-muted small">Update order information for <strong class="text-primary">@Model.OrdersNamNh.OrderCode</strong></p>
+            <h1 class="h3 mb-0 text-primary fw-bold">
+                <i class="fas fa-edit me-2"></i>Chỉnh sửa Đơn hàng
+            </h1>
+            <p class="text-muted small mb-0">Cập nhật thông tin cho đơn hàng <strong class="text-primary">#@Model.OrdersNamNh.OrderCode</strong></p>
         </div>
-        <a asp-page="./Index" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left"></i> Back to List
+        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="fa fa-arrow-left me-2"></i> Quay lại danh sách
         </a>
     </div>
 
@@ -22,75 +24,82 @@
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">General Information</h6>
+                <div class="card shadow-sm border-0 mb-4 rounded-3">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-info-circle me-2"></i>Thông tin chung</h6>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.OrderCode" class="form-label text-muted small">Order Code</label>
-                                <input asp-for="OrdersNamNh.OrderCode" class="form-control bg-light" readonly />
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.OrderCode" class="form-label text-muted small fw-bold">Mã đơn hàng</label>
+                                <input asp-for="OrdersNamNh.OrderCode" class="form-control bg-light border-0 fw-bold" readonly />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.Status" class="form-label small font-weight-bold">Order Status</label>
-                                <select asp-for="OrdersNamNh.Status" class="form-control form-select">
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Cancelled">Cancelled</option>
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.Status" class="form-label small fw-bold text-dark">Trạng thái đơn hàng</label>
+                                <select asp-for="OrdersNamNh.Status" class="form-select border-primary shadow-sm">
+                                    <option value="Pending">Chờ xử lý</option>
+                                    <option value="Processing">Đang xử lý</option>
+                                    <option value="Completed">Đã hoàn thành</option>
+                                    <option value="Cancelled">Đã hủy</option>
                                 </select>
-                                <span asp-validation-for="OrdersNamNh.Status" class="text-danger"></span>
+                                <span asp-validation-for="OrdersNamNh.Status" class="text-danger small"></span>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.UserId" class="form-label small">Customer</label>
-                                <select asp-for="OrdersNamNh.UserId" class="form-control form-select" asp-items="ViewBag.UserId"></select>
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.UserId" class="form-label small fw-bold text-dark">Khách hàng (Tài khoản)</label>
+                                <select asp-for="OrdersNamNh.UserId" class="form-select" asp-items="ViewBag.UserId">
+                                    <option value="">-- Chọn khách hàng --</option>
+                                </select>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.VoucherId" class="form-label small">Voucher Applied</label>
-                                <select asp-for="OrdersNamNh.VoucherId" class="form-control form-select" asp-items="ViewBag.VoucherId">
-                                    <option value="">-- No Voucher --</option>
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.VoucherId" class="form-label small fw-bold text-dark">Mã giảm giá áp dụng</label>
+                                <select asp-for="OrdersNamNh.VoucherId" class="form-select" asp-items="ViewBag.VoucherId">
+                                    <option value="">-- Không sử dụng --</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.OrderType" class="form-label small">Order Type</label>
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.OrderType" class="form-label small fw-bold text-dark">Loại đơn hàng</label>
                                 <input asp-for="OrdersNamNh.OrderType" class="form-control" />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.PaymentMethod" class="form-label small">Payment Method</label>
-                                <input asp-for="OrdersNamNh.PaymentMethod" class="form-control" />
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.PaymentMethod" class="form-label small fw-bold text-dark">Phương thức thanh toán</label>
+                                <select asp-for="OrdersNamNh.PaymentMethod" class="form-select">
+                                    <option value="Tiền mặt">Tiền mặt</option>
+                                    <option value="Banking">Chuyển khoản</option>
+                                    <option value="VNPay">VNPay</option>
+                                    <option value="COD">Giao hàng thu tiền (COD)</option>
+                                </select>
                             </div>
 
-                            <div class="col-12 mb-3">
-                                <label asp-for="OrdersNamNh.CustomerNote" class="form-label small">Customer Note</label>
-                                <textarea asp-for="OrdersNamNh.CustomerNote" class="form-control" rows="2"></textarea>
+                            <div class="col-12">
+                                <label asp-for="OrdersNamNh.CustomerNote" class="form-label small fw-bold text-dark">Ghi chú từ khách hàng</label>
+                                <textarea asp-for="OrdersNamNh.CustomerNote" class="form-control" rows="2" placeholder="Nhập ghi chú nếu có..."></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h6 class="m-0 font-weight-bold text-info">Shipping Details</h6>
+                <div class="card shadow-sm border-0 mb-4 rounded-3">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="m-0 fw-bold text-info"><i class="fas fa-shipping-fast me-2"></i>Thông tin vận chuyển</h6>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.ReceiverName" class="form-label small">Receiver Name</label>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.ReceiverName" class="form-label small fw-bold text-dark">Tên người nhận</label>
                                 <input asp-for="OrdersNamNh.ReceiverName" class="form-control" />
-                                <span asp-validation-for="OrdersNamNh.ReceiverName" class="text-danger"></span>
+                                <span asp-validation-for="OrdersNamNh.ReceiverName" class="text-danger small"></span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="OrdersNamNh.ReceiverPhone" class="form-label small">Phone Number</label>
+                            <div class="col-md-6">
+                                <label asp-for="OrdersNamNh.ReceiverPhone" class="form-label small fw-bold text-dark">Số điện thoại liên lạc</label>
                                 <input asp-for="OrdersNamNh.ReceiverPhone" class="form-control" />
-                                <span asp-validation-for="OrdersNamNh.ReceiverPhone" class="text-danger"></span>
+                                <span asp-validation-for="OrdersNamNh.ReceiverPhone" class="text-danger small"></span>
                             </div>
-                            <div class="col-12 mb-3">
-                                <label asp-for="OrdersNamNh.ReceiverAddress" class="form-label small">Address</label>
+                            <div class="col-12">
+                                <label asp-for="OrdersNamNh.ReceiverAddress" class="form-label small fw-bold text-dark">Địa chỉ giao hàng chi tiết</label>
                                 <input asp-for="OrdersNamNh.ReceiverAddress" class="form-control" />
-                                <span asp-validation-for="OrdersNamNh.ReceiverAddress" class="text-danger"></span>
+                                <span asp-validation-for="OrdersNamNh.ReceiverAddress" class="text-danger small"></span>
                             </div>
                         </div>
                     </div>
@@ -98,72 +107,69 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card shadow-sm mb-4 border-primary">
+                <div class="card shadow-sm mb-4 border-0 rounded-3 overflow-hidden">
                     <div class="card-header bg-primary text-white py-3">
-                        <h6 class="m-0 font-weight-bold">Order Summary</h6>
+                        <h6 class="m-0 fw-bold"><i class="fas fa-calculator me-2"></i>Tổng kết đơn hàng</h6>
                     </div>
                     <div class="card-body bg-light">
                         <div class="mb-3">
-                            <label asp-for="OrdersNamNh.Subtotal" class="form-label small text-muted">Subtotal</label>
+                            <label asp-for="OrdersNamNh.Subtotal" class="form-label small text-muted">Tạm tính</label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input asp-for="OrdersNamNh.Subtotal" class="form-control text-end" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-end-0">₫</span>
+                                <input asp-for="OrdersNamNh.Subtotal" class="form-control text-end border-start-0" placeholder="0" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="OrdersNamNh.DiscountTotal" class="form-label small text-muted">Discount</label>
+                            <label asp-for="OrdersNamNh.DiscountTotal" class="form-label small text-muted">Giảm giá</label>
                             <div class="input-group">
-                                <span class="input-group-text text-success">-</span>
-                                <input asp-for="OrdersNamNh.DiscountTotal" class="form-control text-end text-success" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-end-0 text-success">-</span>
+                                <input asp-for="OrdersNamNh.DiscountTotal" class="form-control text-end text-success border-start-0" placeholder="0" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="OrdersNamNh.TaxTotal" class="form-label small text-muted">Tax</label>
+                            <label asp-for="OrdersNamNh.TaxTotal" class="form-label small text-muted">Thuế</label>
                             <div class="input-group">
-                                <span class="input-group-text">+</span>
-                                <input asp-for="OrdersNamNh.TaxTotal" class="form-control text-end" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-end-0">+</span>
+                                <input asp-for="OrdersNamNh.TaxTotal" class="form-control text-end border-start-0" placeholder="0" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="OrdersNamNh.ShippingFee" class="form-label small text-muted">Shipping Fee</label>
+                            <label asp-for="OrdersNamNh.ShippingFee" class="form-label small text-muted">Phí ship</label>
                             <div class="input-group">
-                                <span class="input-group-text">+</span>
-                                <input asp-for="OrdersNamNh.ShippingFee" class="form-control text-end" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-end-0">+</span>
+                                <input asp-for="OrdersNamNh.ShippingFee" class="form-control text-end border-start-0" placeholder="0" />
                             </div>
                         </div>
-                        <hr />
+                        <hr class="my-4" />
                         <div class="mb-3">
-                            <label asp-for="OrdersNamNh.GrandTotal" class="form-label font-weight-bold">Grand Total</label>
+                            <label asp-for="OrdersNamNh.GrandTotal" class="form-label fw-bold h5">Tổng thanh toán</label>
                             <div class="input-group input-group-lg">
-                                <span class="input-group-text bg-white border-primary text-primary fw-bold">$</span>
-                                <input asp-for="OrdersNamNh.GrandTotal" class="form-control text-end font-weight-bold text-primary border-primary" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-primary text-primary fw-bold">₫</span>
+                                <input asp-for="OrdersNamNh.GrandTotal" class="form-control text-end fw-bold text-primary border-primary" placeholder="0" />
                             </div>
-                            <span asp-validation-for="OrdersNamNh.GrandTotal" class="text-danger"></span>
+                            <span asp-validation-for="OrdersNamNh.GrandTotal" class="text-danger small"></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label asp-for="OrdersNamNh.CreatedAt" class="form-label small text-muted">Created At</label>
-                            <input asp-for="OrdersNamNh.CreatedAt" class="form-control form-control-sm bg-light" readonly />
+                <div class="card shadow-sm border-0 mb-4 rounded-3">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between mb-2 small text-muted">
+                            <span>Ngày tạo:</span>
+                            <span class="fw-bold">@Model.OrdersNamNh.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</span>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="OrdersNamNh.UpdatedAt" class="form-label small text-muted">Last Updated</label>
-                            <input asp-for="OrdersNamNh.UpdatedAt" class="form-control form-control-sm bg-light" readonly />
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span>Cập nhật mới nhất:</span>
+                            <span class="fw-bold">@(Model.OrdersNamNh.UpdatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                        <i class="fa fa-save"></i> Save Changes
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm fw-bold rounded-pill">
+                        <i class="fa fa-save me-2"></i> Lưu thay đổi
                     </button>
-                    <button type="button" id="btnHubUpdate" class="btn btn-warning btn-lg shadow-sm">
-                        <i class="fas fa-wifi"></i> Update By SignalR
-                    </button>
-                    <a asp-page="./Index" class="btn btn-light text-secondary">Cancel</a>
+                    <a asp-page="./Index" class="btn btn-light text-secondary mt-2 rounded-pill">Hủy bỏ</a>
                 </div>
             </div>
         </div>
@@ -224,38 +230,5 @@
                 document.body.appendChild(notification);
             }
         });
-
-        var btnHubUpdate = document.getElementById("btnHubUpdate");
-        if (btnHubUpdate) {
-            btnHubUpdate.addEventListener("click", function (event) {
-                event.preventDefault();
-                
-                var formObj = {
-                    OrderId: currentOrderId,
-                    OrderCode: document.getElementById("OrdersNamNh_OrderCode").value,
-                    Status: document.getElementById("OrdersNamNh_Status").value,
-                    UserId: parseInt(document.getElementById("OrdersNamNh_UserId").value) || null,
-                    VoucherId: parseInt(document.getElementById("OrdersNamNh_VoucherId").value) || null,
-                    OrderType: document.getElementById("OrdersNamNh_OrderType").value,
-                    PaymentMethod: document.getElementById("OrdersNamNh_PaymentMethod").value,
-                    CustomerNote: document.getElementById("OrdersNamNh_CustomerNote").value,
-                    ReceiverName: document.getElementById("OrdersNamNh_ReceiverName").value,
-                    ReceiverPhone: document.getElementById("OrdersNamNh_ReceiverPhone").value,
-                    ReceiverAddress: document.getElementById("OrdersNamNh_ReceiverAddress").value,
-                    Subtotal: parseFloat(document.getElementById("OrdersNamNh_Subtotal").value) || 0,
-                    DiscountTotal: parseFloat(document.getElementById("OrdersNamNh_DiscountTotal").value) || 0,
-                    TaxTotal: parseFloat(document.getElementById("OrdersNamNh_TaxTotal").value) || 0,
-                    ShippingFee: parseFloat(document.getElementById("OrdersNamNh_ShippingFee").value) || 0,
-                    GrandTotal: parseFloat(document.getElementById("OrdersNamNh_GrandTotal").value) || 0,
-                    CreatedAt: document.getElementById("OrdersNamNh_CreatedAt").value || null,
-                    UpdatedAt: document.getElementById("OrdersNamNh_UpdatedAt").value || null
-                };
-
-                connection.invoke("hubUpdate_OrdersNamNH", formObj)
-                    .catch(function (err) {
-                        console.error(err.toString());
-                    });
-            });
-        }
     </script>
 }

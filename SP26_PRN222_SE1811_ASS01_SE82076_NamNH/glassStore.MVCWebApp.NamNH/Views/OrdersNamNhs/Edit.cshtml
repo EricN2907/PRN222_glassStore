@@ -1,4 +1,4 @@
-﻿@model glassStore.Entites.NamNH.Models.OrdersNamNh
+@model glassStore.Entites.NamNH.Models.OrdersNamNh
 
 @{
     ViewData["Title"] = "Chỉnh Sửa Đơn Hàng";
@@ -95,8 +95,10 @@
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Email Khách Hàng (User ID)</label>
-                            <input asp-for="UserId" class="form-control" />
+                            <label asp-for="UserId" class="form-label">Khách Hàng (Tài khoản)</label>
+                            <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                                <option value="">-- Chọn khách hàng --</option>
+                            </select>
                             <span asp-validation-for="UserId" class="text-danger"></span>
                         </div>
                     </div>

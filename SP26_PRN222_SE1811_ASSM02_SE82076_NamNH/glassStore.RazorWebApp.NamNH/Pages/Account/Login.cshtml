@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model glassStore.RazorWebApp.Pages.Account.LoginModel
 @{
     Layout = null;
@@ -119,7 +119,7 @@
             </div>
         }
 
-        <form method="post">
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
 
             <div class="form-floating mb-3 text-dark">
                 <input type="text" class="form-control" asp-for="UserName" id="floatingInput" placeholder="username" required>

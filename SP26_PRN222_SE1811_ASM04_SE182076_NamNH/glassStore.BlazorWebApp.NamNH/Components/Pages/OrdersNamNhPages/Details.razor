@@ -1,63 +1,190 @@
-﻿@page "/ordersnamnhs/details"
+@page "/ordersnamnhs/details"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @using Microsoft.EntityFrameworkCore
 @using glassStore.Entites.NamNH.Models
-@inject IDbContextFactory<glassStore.Entites.NamNH.Models.glass_StoreContext> DbFactory
+@using Microsoft.JSInterop
 @inject NavigationManager NavigationManager
+@inject IOrdersNamNhService OrdersNamNhService
+@inject IJSRuntime JSRuntime
 
-<PageTitle>Details</PageTitle>
+@rendermode InteractiveServer
 
-<h1>Details</h1>
+<PageTitle>Order Details - NamNH</PageTitle>
 
-<div>
-    <h2>OrdersNamNh</h2>
-    <hr />
-    @if (ordersnamnh is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">UserId</dt>
-            <dd class="col-sm-10">@ordersnamnh.UserId</dd>
-            <dt class="col-sm-2">VoucherId</dt>
-            <dd class="col-sm-10">@ordersnamnh.VoucherId</dd>
-            <dt class="col-sm-2">OrderType</dt>
-            <dd class="col-sm-10">@ordersnamnh.OrderType</dd>
-            <dt class="col-sm-2">OrderCode</dt>
-            <dd class="col-sm-10">@ordersnamnh.OrderCode</dd>
-            <dt class="col-sm-2">PaymentMethod</dt>
-            <dd class="col-sm-10">@ordersnamnh.PaymentMethod</dd>
-            <dt class="col-sm-2">Subtotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.Subtotal</dd>
-            <dt class="col-sm-2">DiscountTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.DiscountTotal</dd>
-            <dt class="col-sm-2">TaxTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.TaxTotal</dd>
-            <dt class="col-sm-2">ShippingFee</dt>
-            <dd class="col-sm-10">@ordersnamnh.ShippingFee</dd>
-            <dt class="col-sm-2">GrandTotal</dt>
-            <dd class="col-sm-10">@ordersnamnh.GrandTotal</dd>
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10">@ordersnamnh.Status</dd>
-            <dt class="col-sm-2">CustomerNote</dt>
-            <dd class="col-sm-10">@ordersnamnh.CustomerNote</dd>
-            <dt class="col-sm-2">ReceiverName</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverName</dd>
-            <dt class="col-sm-2">ReceiverPhone</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverPhone</dd>
-            <dt class="col-sm-2">ReceiverAddress</dt>
-            <dd class="col-sm-10">@ordersnamnh.ReceiverAddress</dd>
-            <dt class="col-sm-2">CreatedAt</dt>
-            <dd class="col-sm-10">@ordersnamnh.CreatedAt</dd>
-            <dt class="col-sm-2">UpdatedAt</dt>
-            <dd class="col-sm-10">@ordersnamnh.UpdatedAt</dd>
-        </dl>
-        <div>
-            <a href="@($"/ordersnamnhs/edit?orderid={ordersnamnh.OrderId}")">Edit</a> |
-            <a href="@($"/ordersnamnhs")">Back to List</a>
+<div class="row mb-4 animate-in">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Order Details</h2>
+                <p class="text-muted small mb-0">Viewing detailed information for Order #@ordersnamnh?.OrderCode</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="@($"/ordersnamnhs/edit?orderid={ordersnamnh?.OrderId}")" class="btn btn-warning px-4 text-white fw-bold">
+                    <i class="fas fa-edit me-2"></i> Edit Order
+                </a>
+                <a href="/ordersnamnhs" class="btn btn-light px-4 text-muted">
+                    <i class="fas fa-arrow-left me-2"></i> Back to List
+                </a>
+            </div>
         </div>
-    }
+    </div>
 </div>
+
+@if (ordersnamnh == null)
+{
+    <div class="d-flex justify-content-center p-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+}
+else
+{
+    <div class="row g-4 animate-in" style="animation-delay: 0.1s">
+        <div class="col-lg-8">
+            <!-- Main Info Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-transparent">
+                    <span class="fw-bold text-uppercase small tracking-wider text-muted">General Information</span>
+                    <span class="badge @GetStatusClass(ordersnamnh.Status) bg-opacity-10 text-@GetStatusTextColor(ordersnamnh.Status) px-3 py-2">
+                        @ordersnamnh.Status
+                    </span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Order Code</label>
+                            <span class="fs-5 fw-bold text-dark">@ordersnamnh.OrderCode</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Order Type</label>
+                            <span class="fs-5 fw-medium">@ordersnamnh.OrderType</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Payment Method</label>
+                            <span class="fw-medium">@(ordersnamnh.PaymentMethod == "Banking" ? "Chuyển khoản (Banking)" : ordersnamnh.PaymentMethod)</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Created Date</label>
+                            <span class="text-muted">@ordersnamnh.CreatedAt?.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Table Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <span class="fw-bold text-uppercase small tracking-wider text-muted">Order Items</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Product Details</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Unit Price</th>
+                                <th class="text-end pe-4">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ordersnamnh.OrderDetailNamNhs != null && ordersnamnh.OrderDetailNamNhs.Any())
+                            {
+                                @foreach (var item in ordersnamnh.OrderDetailNamNhs)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="fw-bold text-dark">@item.ProductNameSnapshot</div>
+                                            <div class="text-muted small">@item.VariantDescSnapshot</div>
+                                        </td>
+                                        <td class="text-center fw-medium">@item.Quantity</td>
+                                        <td class="text-end">₫@item.UnitPriceAtPurchase?.ToString("N0")</td>
+                                        <td class="text-end fw-bold text-primary pe-4">₫@item.LineTotal?.ToString("N0")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Logistics Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <span class="fw-bold text-uppercase small tracking-wider text-muted">Shipping & Receiver</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Receiver Name</label>
+                            <span class="fw-bold">@ordersnamnh.ReceiverName</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Phone Number</label>
+                            <span class="fw-medium">@ordersnamnh.ReceiverPhone</span>
+                        </div>
+                        <div class="col-12">
+                            <label class="small text-muted fw-bold text-uppercase d-block mb-1">Shipping Address</label>
+                            <p class="mb-0">@ordersnamnh.ReceiverAddress</p>
+                        </div>
+                        @if (!string.IsNullOrEmpty(ordersnamnh.CustomerNote))
+                        {
+                            <div class="col-12">
+                                <div class="bg-light p-3 rounded-3 mt-2 border-start border-primary border-4 text-muted small fst-italic">
+                                    <label class="small text-primary fw-bold text-uppercase d-block mb-1 not-italic">Customer Note</label>
+                                    "@ordersnamnh.CustomerNote"
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Customer Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent">
+                    <span class="fw-bold text-uppercase small tracking-wider text-muted">Customer Account</span>
+                </div>
+                <div class="card-body text-center p-4">
+                    <div class="avatar-large mx-auto mb-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center rounded-circle" style="width: 72px; height: 72px; font-size: 1.8rem;">
+                        @(ordersnamnh.User?.FullName?.FirstOrDefault() ?? 'U')
+                    </div>
+                    <h5 class="fw-bold mb-1">@ordersnamnh.User?.FullName</h5>
+                    <p class="text-muted small mb-0">@ordersnamnh.User?.Email</p>
+                </div>
+            </div>
+
+            <!-- Financial Summary Card -->
+            <div class="card border-0 shadow-sm bg-dark text-white p-4 rounded-4 mt-auto">
+                <div class="card-header bg-transparent border-0 p-0 mb-3">
+                    <span class="fw-bold text-uppercase small tracking-wider text-white-50">Financial Summary</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-white-50 small">Subtotal</span>
+                        <span class="fw-medium">@ordersnamnh.Subtotal?.ToString("N0") đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-white-50 small">Discount Amount</span>
+                        <span class="text-danger fw-medium small">- @ordersnamnh.DiscountTotal?.ToString("N0") đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-white-50 small">Tax (VAT)</span>
+                        <span class="fw-medium">@ordersnamnh.TaxTotal?.ToString("N0") đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4 pb-3 border-bottom border-secondary">
+                        <span class="text-white-50 small">Shipping Fee</span>
+                        <span class="fw-medium">@ordersnamnh.ShippingFee?.ToString("N0") đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5">Grand Total</span>
+                        <span class="fs-2 fw-bold text-primary">@ordersnamnh.GrandTotal?.ToString("N0") đ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     private OrdersNamNh? ordersnamnh;
@@ -67,12 +194,54 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        ordersnamnh = await context.OrdersNamNhs.FirstOrDefaultAsync(m => m.OrderId == OrderId);
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        ordersnamnh = await OrdersNamNhService.GetByIdAsync(OrderId);
 
         if (ordersnamnh is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && OrderId != 0)
+        {
+            var dotNetHelper = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("initSignalR", OrderId, dotNetHelper);
+        }
+    }
+
+    [JSInvokable]
+    public async Task RefreshData()
+    {
+        await LoadData();
+        StateHasChanged();
+    }
+
+    private string GetStatusClass(string? status)
+    {
+        return status switch
+        {
+            "Paid" => "bg-success",
+            "Pending" => "bg-warning",
+            "Cancelled" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetStatusTextColor(string? status)
+    {
+        return status switch
+        {
+            "Paid" => "success",
+            "Pending" => "warning",
+            "Cancelled" => "danger",
+            _ => "secondary"
+        };
     }
 }

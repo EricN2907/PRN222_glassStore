@@ -1,5 +1,6 @@
-﻿using glassStore.Entites.NamNH.Models;
+using glassStore.Entites.NamNH.Models;
 using glassStore.Service.NamNH;
+using glassStore.Service.NamNH.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SystemUserAccountService _userAccountService;
+        private readonly IAccountService _userAccountService;
 
-        public AccountController(SystemUserAccountService systemUserAccountService) => _userAccountService = systemUserAccountService;
+        public AccountController(IAccountService userAccountService) => _userAccountService = userAccountService;
 
         public IActionResult Index()
         {
@@ -21,13 +22,14 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
             //return View();
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string userName, string password)
+        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
         {
             try
             {
@@ -46,6 +48,11 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
 
                     Response.Cookies.Append("UserName", userAccount.FullName);
                     Response.Cookies.Append("Role", userAccount.RoleId.ToString());
+
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
 
                     return RedirectToAction("Index", "OrdersNamNhs");
                 }
@@ -68,7 +75,7 @@ namespace glassStore.MVCWebApp.NamNH.Controllers
                 }
             }
 
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             ModelState.AddModelError("", "Login failure");
             return View();
         }

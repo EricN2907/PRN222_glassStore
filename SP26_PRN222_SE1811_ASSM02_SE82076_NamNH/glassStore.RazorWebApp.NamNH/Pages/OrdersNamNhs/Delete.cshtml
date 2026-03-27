@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model glassStore.RazorWebApp.NamNH.Pages.OrdersNamNhs.DeleteModel
 
 @{
@@ -98,10 +98,6 @@
                         <button type="submit" class="btn btn-danger px-4">
                             🗑️ Delete Order
                         </button>
-                        <input type="button"
-                               id="btnHubDelete"
-                               value="Delete By SignalR"
-                               class="btn btn-warning ms-2" />
                     </form>
                 </div>
 
@@ -124,43 +120,4 @@
     connection.start().then(function(){
         console.log("NamNH Delete: SignalR Connected");
     }).catch(err => console.error(err.toString()));
-    document.getElementById("btnHubDelete").addEventListener("click", function (event) {
-        var orderId = @Model.OrdersNamNh.OrderId;
-        connection.invoke("hubDelete_OrdersNamNH", orderId)
-            .catch(err => console.error(err.toString()));
-        event.preventDefault();
-    });
 </script>
-@* <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
-
-<script>
-    "use strict";
-
-    var connection = new signalR.HubConnectionBuilder().withUrl("/glassStore_Hub").build();
-
-    connection.start().then(function(){
-        console.log("SignalR Connected.");
-    }).catch(function(err){
-        return console.error(err.toString());
-    });
-
-        connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
-        console.log("Order deleted:", orderId);
-        alert("Order đã bị xóa thành công!");
-        window.location.href = "/OrdersNamNhs/Index";
-    });
-
-        connection.on("ReceiveErrorNamNH", function (errorMessage) {
-        alert("Thất bại: " + errorMessage);
-    });
-
-       document.getElementById("btnHubDelete").addEventListener("click", function (event) {
-        var orderId = @Model.OrdersNamNh.OrderId;
-
-        connection.invoke("hubDelete_OrdersNamNH", orderId)
-            .catch(function (err) {
-                console.error(err.toString());
-            });
-        event.preventDefault();
-    });
-</script> *@

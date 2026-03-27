@@ -1,10 +1,25 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Trang chủ - Glass Store";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg p-5 border-0 rounded-4 bg-light">
+                <i class="fas fa-glasses fa-5x text-primary mb-4"></i>
+                <h1 class="display-4 fw-bold text-dark">Hệ Thống Quản Lý Glass Store (Ass2)</h1>
+                <p class="lead text-muted mb-5">Nền tảng Razor Pages quản lý đơn hàng hiệu quả.</p>
+                
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a asp-page="/OrdersNamNhs/Index" class="btn btn-primary btn-lg px-5 py-3 text-white fw-bold shadow-sm rounded-pill">
+                        <i class="fas fa-list-alt me-2"></i> Vào Coi Danh Sách Đơn Hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />

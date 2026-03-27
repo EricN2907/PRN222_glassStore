@@ -8,44 +8,57 @@ namespace glassStore.WorkerService.NamNH
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IOrdersNamNhService _order;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public Worker(ILogger<Worker> logger , IOrdersNamNhService order)
+        public Worker(ILogger<Worker> logger, IServiceScopeFactory scopeFactory)
         {
             _logger = logger;
-            _order = order;
+            _scopeFactory = scopeFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("NamNH_WorkerService started at: {time}", DateTimeOffset.Now);
             while (!stoppingToken.IsCancellationRequested)
             {
-                //if (_logger.IsEnabled(LogLevel.Information))
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //}
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-
-                // My busines logic here
-
-                await this.WriteToFile();
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var order = scope.ServiceProvider.GetRequiredService<IOrdersNamNhService>();
+                    await this.WriteToFile(order);
+                }
 
                 await Task.Delay(5000, stoppingToken);
             }
         }
-        protected async Task WriteToFile()
+        protected async Task WriteToFile(IOrdersNamNhService _order)
         {
-            var item = await _order.GetAllAsync();  
-            var opt = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
-            var content = JsonSerializer.Serialize(item, opt);
-            var filePath = @"D:\DataLog_PRN222.txt";
-            using(var file = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.None))
+            try
             {
-                using(var writer = new StreamWriter(file))
+                var item = await _order.GetAllAsync();
+                var opt = new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, WriteIndented = true };
+                var content = JsonSerializer.Serialize(item, opt);
+                var filePath = @"D:\DataLog_PRN222.txt";
+
+                // Use FileMode.Create to overwrite the file each time, preventing duplication.
+                // Added FileShare.ReadWrite to be more permissive.
+                using (var file = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    await writer.WriteLineAsync(content);
-                    await writer.FlushAsync();
+                    using (var writer = new StreamWriter(file))
+                    {
+                        await writer.WriteLineAsync(content);
+                        await writer.FlushAsync();
+                    }
                 }
+            }
+            catch (IOException ex)
+            {
+                _logger.LogWarning("Could not write to log file - it might be open in another program: {message}", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while writing to log file.");
             }
         }
     }

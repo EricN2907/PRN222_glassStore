@@ -1,6 +1,7 @@
 using glassStore.Entites.NamNH.Models;
 using glassStore.Service.NamNH;
 using glassStore.Service.NamNH.Interface;
+using glassStore.Service.NamNH.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using glassStore.MVCWebApp.NamNH.Hubs;
@@ -21,7 +22,8 @@ builder.Services.AddSignalR();
 // Add depenency injection
 builder.Services.AddScoped<IOrdersNamNhService, OrdersNamNhService>();
 builder.Services.AddScoped<OrderDetailNamNhService>();
-builder.Services.AddScoped<SystemUserAccountService>();
+builder.Services.AddScoped<IAccountService, SystemUserAccountService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //Add Authentication
 builder.Services.AddAuthentication()

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<glassStore.Entites.NamNH.Models.OrdersNamNh>
+@model IEnumerable<glassStore.Entites.NamNH.Models.OrdersNamNh>
 
 @{
     Layout = null;
@@ -175,10 +175,10 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-bold text-secondary">Tên sản phẩm / KH</label>
+                            <label class="form-label fw-bold text-secondary">Tên Người Nhận</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fas fa-tag"></i></span>
-                                <input type="text" name="product_name" class="form-control" placeholder="Nhập tên..." value="@Context.Request.Query["product_name"]" />
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                <input type="text" name="receiver_name" class="form-control" placeholder="Nhập tên..." value="@Context.Request.Query["receiver_name"]" />
                             </div>
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
@@ -203,16 +203,16 @@
                         <thead>
                             <tr>
                                 <th class="text-center" width="120px">Thao tác</th>
-                                <th>@Html.DisplayNameFor(model => model.OrderCode)</th>
-                                <th>@Html.DisplayNameFor(model => model.Status)</th>
-                                <th>@Html.DisplayNameFor(model => model.GrandTotal)</th>
-                                <th>@Html.DisplayNameFor(model => model.ReceiverName)</th>
-                                <th>@Html.DisplayNameFor(model => model.ReceiverPhone)</th>
-                                <th>@Html.DisplayNameFor(model => model.OrderType)</th>
-                                <th>@Html.DisplayNameFor(model => model.PaymentMethod)</th>
-                                <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
-                                <th>@Html.DisplayNameFor(model => model.Subtotal)</th>
-                                <th>@Html.DisplayNameFor(model => model.DiscountTotal)</th>
+                                <th>Mã Đơn</th>
+                                <th>Trạng Thái</th>
+                                <th>Tổng Tiền</th>
+                                <th>Người Nhận</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Loại Đơn</th>
+                                <th>Thanh Toán</th>
+                                <th>Ngày Tạo</th>
+                                <th>Tạm Tính</th>
+                                <th>Giảm Giá</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -226,7 +226,7 @@
                                             <a asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info btn-icon" title="Chi tiết"><i class="fas fa-info"></i></a>
                                             <a asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger btn-icon" title="Xóa"><i class="fas fa-trash"></i></a>
                                         </td>
-                                        <td class="fw-bold text-primary">@Html.DisplayFor(modelItem => item.OrderCode)</td>
+                                        <td class="fw-bold text-primary">@item.OrderCode</td>
                                         <td>
                                             @{
                                                 var st = item.Status?.ToString().ToLower() ?? "";
@@ -236,16 +236,16 @@
                                                 else if (st.Contains("cancel") || st.Contains("fail")) { statusClass = "bg-danger"; }
                                                 else { statusClass = "bg-info"; }
                                             }
-                                            <span class="badge @statusClass badge-status">@Html.DisplayFor(modelItem => item.Status)</span>
+                                            <span class="badge @statusClass badge-status">@item.Status</span>
                                         </td>
-                                        <td class="fw-bold text-success">@Html.DisplayFor(modelItem => item.GrandTotal)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.ReceiverName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.ReceiverPhone)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.OrderType)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.PaymentMethod)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
-                                        <td class="text-muted">@Html.DisplayFor(modelItem => item.Subtotal)</td>
-                                        <td class="text-muted">@Html.DisplayFor(modelItem => item.DiscountTotal)</td>
+                                        <td class="fw-bold text-success">@item.GrandTotal?.ToString("N0") VNĐ</td>
+                                        <td>@item.ReceiverName</td>
+                                        <td>@item.ReceiverPhone</td>
+                                        <td>@item.OrderType</td>
+                                        <td>@item.PaymentMethod</td>
+                                        <td>@item.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-muted">@item.Subtotal?.ToString("N0")</td>
+                                        <td class="text-muted">@item.DiscountTotal?.ToString("N0")</td>
                                     </tr>
                                 }
                             }
@@ -260,6 +260,45 @@
                     </div>
                 }
             </div>
+            @if (ViewBag.TotalPages > 1)
+            {
+                <div class="card-footer bg-white border-0 py-3">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                                   asp-route-order_code="@ViewBag.OrderCode"
+                                   asp-route-phone_number="@ViewBag.PhoneNumber"
+                                   asp-route-receiver_name="@ViewBag.ReceiverName">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" 
+                                       asp-route-pageNumber="@i"
+                                       asp-route-order_code="@ViewBag.OrderCode"
+                                       asp-route-phone_number="@ViewBag.PhoneNumber"
+                                       asp-route-receiver_name="@ViewBag.ReceiverName">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                                   asp-route-order_code="@ViewBag.OrderCode"
+                                   asp-route-phone_number="@ViewBag.PhoneNumber"
+                                   asp-route-receiver_name="@ViewBag.ReceiverName">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
         </div>
     </div>
 
@@ -272,9 +311,33 @@
 
         connection.on("ReceiveDelete_OrdersNamNH", function (orderId) {
             console.log("Delete ID:", orderId);
+            
+            var notification = document.createElement("div");
+            notification.className = "alert alert-danger position-fixed top-0 end-0 m-3 shadow";
+            notification.style.zIndex = "9999";
+            notification.innerHTML = `<i class="fas fa-trash-alt me-2"></i> Đơn hàng #${orderId} vừa bị xóa!`;
+            document.body.appendChild(notification);
+            
             $(`tr[id='${orderId}']`).fadeOut(500, function() {
                 $(this).remove();
             });
+
+            setTimeout(function() {
+                notification.remove();
+            }, 3000);
+        });
+
+        connection.on("ReceiveUpdate_OrdersNamNH", function (updatedOrder) {
+            console.log("Updated Order:", updatedOrder);
+            var notification = document.createElement("div");
+            notification.className = "alert alert-info position-fixed top-0 end-0 m-3 shadow";
+            notification.style.zIndex = "9999";
+            notification.innerHTML = `<i class="fas fa-info-circle me-2"></i> Đơn hàng ${updatedOrder.orderCode} vừa được cập nhật!`;
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                location.reload(); 
+            }, 1500);
         });
 
         connection.on("ReceiveCreate_OrdersNamNH", function (newOrder) {

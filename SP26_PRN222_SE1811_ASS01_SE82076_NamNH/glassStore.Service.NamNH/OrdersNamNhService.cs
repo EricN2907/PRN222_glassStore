@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +23,8 @@ namespace glassStore.Service.NamNH
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
             }
         }
 
@@ -48,20 +49,35 @@ namespace glassStore.Service.NamNH
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
             }
         }
 
-        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string product_name)
+        public async Task<List<OrdersNamNh>> SearchAsync(string order_code, string phone_number, string receiver_name, int pageNumber = 1, int pageSize = 10)
         {
             //throw new NotImplementedException();
             try
             {
-                return await _repo.SearchAsync(order_code, phone_number, product_name);
+                return await _repo.SearchAsync(order_code, phone_number, receiver_name, pageNumber, pageSize);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
+            }
+        }
+
+        public async Task<int> GetSearchCountAsync(string order_code, string phone_number, string receiver_name)
+        {
+            try
+            {
+                return await _repo.GetSearchCountAsync(order_code, phone_number, receiver_name);
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
             }
         }
 
@@ -77,7 +93,8 @@ namespace glassStore.Service.NamNH
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
             }
         }
     
@@ -89,8 +106,15 @@ namespace glassStore.Service.NamNH
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                var message = ex.InnerException != null ? ex.Message + " | Inner: " + ex.InnerException.Message : ex.Message;
+                throw new Exception(message);
             }
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            var item = await _repo.GetByIdAsync(id);
+            return item != null;
         }
     }
 }
